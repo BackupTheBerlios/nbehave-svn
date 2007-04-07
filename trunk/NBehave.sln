@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NBehave.Framework", "NBehave.Framework\NBehave.Framework.vbproj", "{C82A9602-D065-464F-AB77-44DC5855E7E3}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBehave.Framework.Behaviour", "NBehave.Framework.Behaviour\NBehave.Framework.Behaviour.csproj", "{D4BAB5B7-9205-4C83-B260-E279A3243A93}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Examples.VB", "Examples.VB\Examples.VB.vbproj", "{F94C5D9D-DD4D-46E0-A0A7-1980F8E0AC14}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.CS", "Examples.CS\Examples.CS.csproj", "{13E89A2F-4247-4339-B786-6C805255D48E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C82A9602-D065-464F-AB77-44DC5855E7E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C82A9602-D065-464F-AB77-44DC5855E7E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C82A9602-D065-464F-AB77-44DC5855E7E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C82A9602-D065-464F-AB77-44DC5855E7E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4BAB5B7-9205-4C83-B260-E279A3243A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4BAB5B7-9205-4C83-B260-E279A3243A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4BAB5B7-9205-4C83-B260-E279A3243A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4BAB5B7-9205-4C83-B260-E279A3243A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F94C5D9D-DD4D-46E0-A0A7-1980F8E0AC14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F94C5D9D-DD4D-46E0-A0A7-1980F8E0AC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F94C5D9D-DD4D-46E0-A0A7-1980F8E0AC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F94C5D9D-DD4D-46E0-A0A7-1980F8E0AC14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13E89A2F-4247-4339-B786-6C805255D48E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13E89A2F-4247-4339-B786-6C805255D48E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E89A2F-4247-4339-B786-6C805255D48E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13E89A2F-4247-4339-B786-6C805255D48E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
