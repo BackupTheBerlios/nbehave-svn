@@ -46,12 +46,10 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.vb" />
     <Compile Include="Ensure.vb" />
     <Compile Include="FluentInterface\IGiven.vb" />
     <Compile Include="FluentInterface\IOutcome.vb" />
     <Compile Include="FluentInterface\IEvent.vb" />
-    <Compile Include="NBehaveEventArgs.vb" />
     <Compile Include="Scenario\IScenario.vb" />
     <Compile Include="Scenario\ScenarioOutcome.vb" />
     <Compile Include="Scenario\OutcomeEventArgs.vb" />
