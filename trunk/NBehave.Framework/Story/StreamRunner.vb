@@ -18,7 +18,7 @@ Namespace Story
         Private _storyCount As Int32
         Private _failCount As Int32
 
-        Private failedStories As IList(Of Scenario.ScenarioOutcome)
+        Private failedStories As New List(Of Scenario.ScenarioOutcome)
         Private _outStream As IO.StreamWriter
 
 
@@ -103,7 +103,7 @@ Namespace Story
                 OutStream.WriteLine(PassedString)
             Else
                 OutStream.WriteLine(FailedString)
-                'TODO: Print all failed Storie's to stream.
+                WriteFailures()
             End If
         End Sub
 
@@ -111,6 +111,15 @@ Namespace Story
 
         Protected Overridable Sub WriteSummary()
             OutStream.WriteLine(String.Format(CurrentThread.CurrentUICulture, SummaryString, StoryCount - FailCount, FailCount))
+            OutStream.Flush()
+        End Sub
+
+
+        Protected Overridable Sub WriteFailures()
+            OutStream.WriteLine()
+            For Each failure As Scenario.ScenarioOutcome In failedStories
+                OutStream.WriteLine(failure.Message)
+            Next
             OutStream.Flush()
         End Sub
 

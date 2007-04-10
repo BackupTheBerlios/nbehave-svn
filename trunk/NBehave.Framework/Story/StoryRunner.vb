@@ -24,7 +24,7 @@ Namespace Story
 
         Private ReadOnly StoryType As Type = GetType(Story(Of ))
 
-        Private stories As IList '(Of Object)
+        Private stories As IList
         Private scenarioOutcomes As ReadOnlyCollection(Of ScenarioOutcome)
 
 
@@ -84,11 +84,16 @@ Namespace Story
 
                 Try
                     evtInfo.AddEventHandler(aStory, storyDelegate)
-                    'Catch ex As ArgumentException
-                    '    Debug.WriteLine(ex.ToString)
 
-                    Dim mi As Reflection.MethodInfo = aStory.GetType.GetMethod("Run")   'Should probably Invoke Istory<T>.Run
-                    mi.Invoke(aStory, Nothing)
+                    Dim miSpecify As Reflection.MethodInfo = aStory.GetType.GetMethod("Specify")   'Should probably Invoke Istory<T>.Run
+                    miSpecify.Invoke(aStory, Nothing)
+
+                    Dim miRun As Reflection.MethodInfo = aStory.GetType.GetMethod("Run")   'Should probably Invoke Istory<T>.Run
+                    miRun.Invoke(aStory, Nothing)
+
+                Catch ex As Exception ' ArgumentException
+                    Debug.WriteLine(ex.ToString)
+
 
                 Finally
                     evtInfo.RemoveEventHandler(aStory, storyDelegate)
@@ -102,10 +107,13 @@ Namespace Story
         End Sub
 
 
-        Private Function GetStoryOutcome() As ScenarioOutcome
+        Public Function GetStoryOutcome() As ScenarioOutcome
             Dim storyOutcome As New ScenarioOutcome(True, String.Empty)
 
-            If scenarioOutcomes IsNot Nothing Then
+            If scenarioOutcomes Is Nothing OrElse scenarioOutcomes.Count = 0 Then
+                storyOutcome.Passed = False
+                storyOutcome.Message = "The story has no outcome(s)"
+            Else
                 For Each o As ScenarioOutcome In scenarioOutcomes
                     storyOutcome.Passed = storyOutcome.Passed And o.Passed
                     If Not o.Passed Then storyOutcome.Message &= o.Message & Environment.NewLine

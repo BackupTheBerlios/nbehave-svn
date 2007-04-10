@@ -26,7 +26,7 @@ Namespace Story
     Public MustInherit Class Story(Of T)
         Implements IStory(Of T)
 
-        Public MustOverride Sub Specify()
+        Public MustOverride Sub Specify() Implements IStory(Of T).Specify
 
         Public Event StoryOutcome(ByVal sender As Object, ByVal e As Scenario.OutcomeEventArgs) Implements IStory(Of T).StoryOutcome
 

@@ -28,14 +28,13 @@ namespace NBehave.Framework.Behaviour
 
             override public void Specify()
             {
-                // Should Call Given,When, Then in base class.
-                Given(null).When(null).Then(null);
+                // Added stuff via constructor, no need to add stuff again
             }
 
 
             public override SimplestPossibleWorld SetupWorld()
             {
-                return new SimplestPossibleWorld();
+                return this.World ;
             }
         }
 
@@ -190,6 +189,7 @@ namespace NBehave.Framework.Behaviour
             //Given
             Mockery mocks = new Mockery();
             SimplestPossibleWorld world = new SimplestPossibleWorld();
+
 
             IGiven<SimplestPossibleWorld> given = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
             Expect.Once.On(given).Method("Setup").With(world);

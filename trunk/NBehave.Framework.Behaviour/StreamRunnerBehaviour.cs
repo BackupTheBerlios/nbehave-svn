@@ -17,7 +17,8 @@ namespace NBehave.Framework.Behaviour
         public void ShouldRunStoryAndGetStuffInStream()
         {
             //Given
-            string expected = "." + Environment.NewLine + "Passed: 1" + Environment.NewLine + "Failed: 0" + Environment.NewLine + "Passed !" + Environment.NewLine ;
+            string expected = "x" + Environment.NewLine + "Passed: 0" + Environment.NewLine + "Failed: 1" + Environment.NewLine + "Failed !" + Environment.NewLine + Environment.NewLine + 
+                                    "The story has no outcome(s)" + Environment.NewLine ;
 
             FakeStory story = new FakeStory(); // mocks.NewMock<IStory<SimplestPossibleWorld>>();
 

@@ -9,8 +9,8 @@ Namespace Story
     Public Interface IStory(Of T)
         ReadOnly Property Narrative() As Narrative
         Sub AddScenario(ByVal scenario As IScenario(Of T))
+        Sub Specify()
         Sub Run()
-        'Event StoryOutcome(ByVal outcomes As ReadOnlyCollection(Of Outcome))
         Event StoryOutcome As EventHandler(Of OutcomeEventArgs)
 
 

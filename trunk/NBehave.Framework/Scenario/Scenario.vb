@@ -66,7 +66,8 @@ Namespace Scenario
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
         Public Function Run() As ReadOnlyCollection(Of ScenarioOutcome) Implements IScenario(Of T).Run
-            SetupWorld()
+            Specify()
+            World = SetupWorld()
             SetupGivens()
             WorldEvent()
             Dim o As IList(Of ScenarioOutcome) = VerifyOutcomes()
