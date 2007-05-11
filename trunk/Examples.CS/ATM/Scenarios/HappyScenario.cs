@@ -22,10 +22,12 @@ namespace Example.ATM.Scenarios
             Then(new AccountBalanceShouldBeReduced());
         }
 
+        
         private Mockery mocks = new Mockery();
 
         override public Domain.IAccount SetupWorld()
         {
+            //Normally you wouldn't mock the entire world. 
             IAccount account=mocks.NewMock<IAccount>();
 
             Expect.Once.On(account).SetProperty("Balance").To(50);

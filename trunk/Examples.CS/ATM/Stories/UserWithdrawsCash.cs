@@ -15,7 +15,7 @@ namespace Example.ATM.Stories
             /*As a */ "Bank card holder",
             /*I want */ "to be able to withdraw cash from an ATM",
             /* So that */ "I don't have to visit the bank")) 
-        { }
+            { }
 
 
         public override void Specify()
