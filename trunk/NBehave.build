@@ -19,7 +19,7 @@
 	<target name="Compile" depends="Clean">
 		<!-- solution configuration="${configuration}" solutionfile="${sourceDir}\NBehave.sln" / -->
 	<exec program="msbuild"
-                commandline='"NBehave.sln" /v:q /nologo /t:${solution.target}' />		<!--  /p:Configuration=${configuration} -->
+                commandline='"NBehave.sln" /v:q /nologo ' />		<!--  /t:${solution.target} /p:Configuration=${configuration} -->
 	</target>
 	<!-- -->
 	<target name="Clean">
