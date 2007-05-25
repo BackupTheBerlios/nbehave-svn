@@ -21,6 +21,7 @@ namespace Example.ATM.Stories
         public override void Specify()
         {
             AddScenario(new HappyScenario());
+            //AddScenario(new HappyScenarioThatFails()); 
         }
 
     }

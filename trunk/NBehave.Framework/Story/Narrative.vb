@@ -7,24 +7,24 @@ Namespace Story
 
 
     Public Class Narrative
-        Private ReadOnly _asA As String
-        Private ReadOnly _iWant As String
-        Private ReadOnly _soThat As String
+        Private ReadOnly _role As String
+        Private ReadOnly _feature As String
+        Private ReadOnly _benefit As String
 
 
 
-        Public Sub New(ByVal asA As String, ByVal iWant As String, ByVal soThat As String)
-            Me._asA = asA
-            Me._iWant = iWant
-            Me._soThat = soThat
+        Public Sub New(ByVal role As String, ByVal feature As String, ByVal benefit As String)
+            Me._role = role
+            Me._feature = feature
+            Me._benefit = benefit
         End Sub
 
         Public ReadOnly Property Text() As String
             Get
                 Return _
-                "As a: " & _asA & Environment.NewLine & _
-                "I want: " & _iWant & Environment.NewLine & _
-                "So that: " & _soThat
+                "As a: " & _role & Environment.NewLine & _
+                "I want: " & _feature & Environment.NewLine & _
+                "So that: " & _benefit
             End Get
         End Property
 

@@ -107,17 +107,16 @@ Namespace Story
         End Sub
 
 
-        Public Function GetStoryOutcome() As ScenarioOutcome
-            Dim storyOutcome As New ScenarioOutcome(True, String.Empty)
+        Public Function GetStoryOutcome() As StoryOutcome
+            Dim storyOutcome As StoryOutcome = Nothing
 
             If scenarioOutcomes Is Nothing OrElse scenarioOutcomes.Count = 0 Then
-                storyOutcome.Passed = False
-                storyOutcome.Message = "The story has no outcome(s)"
+                storyOutcome = New StoryOutcome(Nothing)
             Else
-                For Each o As ScenarioOutcome In scenarioOutcomes
-                    storyOutcome.Passed = storyOutcome.Passed And o.Passed
-                    If Not o.Passed Then storyOutcome.Message &= o.Message & Environment.NewLine
-                Next
+                Dim outcomes(scenarioOutcomes.Count - 1) As ScenarioOutcome
+
+                scenarioOutcomes.CopyTo(outcomes, 0)
+                storyOutcome = New StoryOutcome(outcomes)
             End If
 
             Return storyOutcome

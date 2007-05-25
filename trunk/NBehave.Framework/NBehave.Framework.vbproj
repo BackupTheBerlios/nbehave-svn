@@ -50,11 +50,13 @@
     <Compile Include="FluentInterface\IGiven.vb" />
     <Compile Include="FluentInterface\IOutcome.vb" />
     <Compile Include="FluentInterface\IEvent.vb" />
+    <Compile Include="Outcome.vb" />
     <Compile Include="Scenario\IScenario.vb" />
     <Compile Include="Scenario\ScenarioOutcome.vb" />
     <Compile Include="Scenario\OutcomeEventArgs.vb" />
     <Compile Include="Story\ConsoleRunner.vb" />
     <Compile Include="Story\StoryEventArgs.vb" />
+    <Compile Include="Story\StoryOutcome.vb" />
     <Compile Include="Story\StreamRunner.vb" />
     <Compile Include="Story\Narrative.vb" />
     <Compile Include="Story\IStory.vb" />

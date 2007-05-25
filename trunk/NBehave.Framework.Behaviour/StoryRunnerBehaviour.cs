@@ -67,11 +67,13 @@ namespace NBehave.Framework.Behaviour
             Mockery mocks = new Mockery();
 
             // The scenario has no outcome.
-            IScenario<SimplestPossibleWorld> scenario = (IScenario<SimplestPossibleWorld>)mocks.NewMock<IScenario<SimplestPossibleWorld>>();
-            Expect.Once.On(scenario).Method("Run").WithNoArguments(); 
+            //IScenario<SimplestPossibleWorld> scenario = (IScenario<SimplestPossibleWorld>)mocks.NewMock<IScenario<SimplestPossibleWorld>>();
+            //Expect.Once.On(scenario).Method("Run").WithNoArguments();
+            //story.AddScenario(scenario);
 
-            IStory<SimplestPossibleWorld> story =new FakeStory(); // (IStory<SimplestPossibleWorld>)mocks.NewMock<IStory<SimplestPossibleWorld>>();
-            story.AddScenario(scenario);
+            IStory<SimplestPossibleWorld> story = new FakeStory(); // (IStory<SimplestPossibleWorld>)mocks.NewMock<IStory<SimplestPossibleWorld>>();
+            //Expect.Once.On(story).Method("Specify");
+            //Expect.Once.On(story).Method("Run");
 
             System.Collections.ArrayList stories = new System.Collections.ArrayList();
             stories.Add(story);

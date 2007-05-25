@@ -10,9 +10,9 @@ Namespace Story
         Inherits EventArgs
 
         Private _story As Object
-        Private _outcome As ScenarioOutcome
+        Private _outcome As StoryOutcome
 
-        Public ReadOnly Property Outcome() As ScenarioOutcome
+        Public ReadOnly Property Outcome() As StoryOutcome
             Get
                 Return _outcome
             End Get
@@ -30,7 +30,7 @@ Namespace Story
         End Sub
 
 
-        Public Sub New(ByVal story As Object, ByVal outcome As ScenarioOutcome)
+        Public Sub New(ByVal story As Object, ByVal outcome As StoryOutcome)
             Me._story = story
             Me._outcome = outcome
         End Sub
