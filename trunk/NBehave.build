@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="NBehave">
 	<!-- -->
+		<property name="sourceDir" value="${directory::get-current-directory()}"/>
+		<property name="configuration" value="Debug" />
+		<property name="solution.target" value="Resources;Compile" />
+
 	<target name="Build" depends="Msi">
 		<property name="sourceDir" value="${directory::get-current-directory()}"/>
 		<property name="configuration" value="Debug" />
@@ -13,7 +17,9 @@
 	</target>
 	<!-- -->
 	<target name="Compile" depends="Clean">
-		<solution configuration="${configuration}" solutionfile="${sourceDir}\NBeaheve\Source\NBehave.sln"></solution>
+		<solution configuration="${configuration}" solutionfile="${sourceDir}\NBeaheve\Source\NBehave.sln" />
+	<exec program="msbuild"
+                commandline='"NBehave.sln" /v:q /nologo /t:${solution.target} /p:Configuration=${configuration}' />		
 	</target>
 	<!-- -->
 	<target name="Clean">
