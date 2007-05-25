@@ -2,8 +2,8 @@
 <project name="NBehave">
 	<!-- -->
 		<property name="sourceDir" value="${directory::get-current-directory()}"/>
-		<property name="configuration" value="Debug" />
-		<property name="solution.target" value="Resources;Compile" />
+		<property name="configuration" value="" />
+		<property name="solution.target" value="Debug" />
 
 	<target name="Build" depends="Msi">
 		<property name="sourceDir" value="${directory::get-current-directory()}"/>
@@ -17,9 +17,9 @@
 	</target>
 	<!-- -->
 	<target name="Compile" depends="Clean">
-		<solution configuration="${configuration}" solutionfile="${sourceDir}\NBeaheve\Source\NBehave.sln" />
+		<!-- solution configuration="${configuration}" solutionfile="${sourceDir}\NBehave.sln" / -->
 	<exec program="msbuild"
-                commandline='"NBehave.sln" /v:q /nologo /t:${solution.target} /p:Configuration=${configuration}' />		
+                commandline='"NBehave.sln" /v:q /nologo /t:${solution.target}' />		<!--  /p:Configuration=${configuration} -->
 	</target>
 	<!-- -->
 	<target name="Clean">
@@ -30,7 +30,7 @@
 	<target name="CleanTestResults">
 		<delete>
 			<fileset>
-				<include name="${sourceDir}\Artifacts\nunitTestResult\**.xml"/>
+				<include name="${sourceDir}\..\Artifacts\nunitTestResult\**.xml"/>
 			</fileset>
 		</delete>
 	</target>
@@ -38,9 +38,9 @@
 	<target name="CleanSource">
 		<delete>
 			<fileset>
-				<include name="${sourceDir}\Source\**\bin\**"/>
-				<include name="${sourceDir}\Source\**\obj\**"/>
-				<exclude name="${sourceDir}\Source\**\bin\**nunit**"/>
+				<include name="${sourceDir}\**\bin\**"/>
+				<include name="${sourceDir}\**\obj\**"/>
+				<exclude name="${sourceDir}\**\bin\**nunit**"/>
 			</fileset>
 		</delete>
 	</target>
