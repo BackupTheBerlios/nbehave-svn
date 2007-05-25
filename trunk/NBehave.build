@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="NBehave">
+	<!-- -->
+	<target name="Build" depends="Msi">
+		<property name="sourceDir" value="${directory::get-current-directory()}"/>
+		<property name="configuration" value="Debug" />
+	</target>
+	<!-- -->
+	<target name="Msi" depends="Test">
+	</target>
+	<!-- -->
+	<target name="Test" depends="Compile">
+	</target>
+	<!-- -->
+	<target name="Compile" depends="Clean">
+		<solution configuration="${configuration}" solutionfile="${sourceDir}\NBeaheve\Source\NBehave.sln"></solution>
+	</target>
+	<!-- -->
+	<target name="Clean">
+		<call target="CleanTestResults"/>
+		<call target="CleanSource"/>
+	</target>
+	<!-- -->
+	<target name="CleanTestResults">
+		<delete>
+			<fileset>
+				<include name="${sourceDir}\Artifacts\nunitTestResult\**.xml"/>
+			</fileset>
+		</delete>
+	</target>
+	<!-- -->
+	<target name="CleanSource">
+		<delete>
+			<fileset>
+				<include name="${sourceDir}\Source\**\bin\**"/>
+				<include name="${sourceDir}\Source\**\obj\**"/>
+				<exclude name="${sourceDir}\Source\**\bin\**nunit**"/>
+			</fileset>
+		</delete>
+	</target>
+</project>
