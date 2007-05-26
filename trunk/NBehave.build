@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="NBehave">
 	<!-- -->
-		<property name="sourceDir" value="${directory::get-current-directory()}"/>
-		<property name="configuration" value="" />
-		<property name="solution.target" value="Debug" />
-
+	<property name="sourceDir" value="${directory::get-current-directory()}"/>
+	<property name="configuration" value=""/>
+	<property name="solution.target" value="Debug"/>
+	<!-- -->
 	<target name="Build" depends="Msi">
-		<property name="sourceDir" value="${directory::get-current-directory()}"/>
-		<property name="configuration" value="Debug" />
 	</target>
 	<!-- -->
 	<target name="Msi" depends="Test">
 	</target>
 	<!-- -->
 	<target name="Test" depends="Compile">
+		<nunit2>
+			<formatter type="Xml" usefile="true" extension=".xml" outputdir="${sourceDir}/../Artifacts/nunitTestResult"/>
+			<test assemblyname="${sourceDir}\NBehave.Framework.Behaviour\bin\Debug\NBehave.Framework.Behaviour.dll"/>
+		</nunit2>
 	</target>
 	<!-- -->
 	<target name="Compile" depends="Clean">
 		<!-- solution configuration="${configuration}" solutionfile="${sourceDir}\NBehave.sln" / -->
-	<exec program="msbuild"
-                commandline='"NBehave.sln" /v:q /nologo ' />		<!--  /t:${solution.target} /p:Configuration=${configuration} -->
+		<exec program="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild" commandline='"NBehave.sln" /v:q /nologo '/>
+		<!--  /t:${solution.target} /p:Configuration=${configuration} -->
 	</target>
 	<!-- -->
 	<target name="Clean">
