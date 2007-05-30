@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="NBehave">
 	<!-- -->
-	<property name="sourceDir" value="${directory::get-current-directory()}"/>
+	<property name="sourceDir" value="${directory::get-current-directory()}\Source"/>
+	<property name="artifactsDir" value="${directory::get-current-directory()}\Artifacts" />
 	<property name="configuration" value=""/>
 	<property name="solution.target" value="Debug"/>
 	<!-- -->
@@ -13,15 +14,15 @@
 	<!-- -->
 	<target name="Test" depends="Compile">
 		<nunit2>
-			<formatter type="Xml" usefile="true" extension=".xml" outputdir="${sourceDir}/../Artifacts/nunitTestResult"/>
+			<formatter type="Xml" usefile="false" /> <!-- extension=".xml" outputdir="${artifactsDir}" -->
 			<test assemblyname="${sourceDir}\NBehave.Framework.Behaviour\bin\Debug\NBehave.Framework.Behaviour.dll"/>
 		</nunit2>
 	</target>
 	<!-- -->
 	<target name="Compile" depends="Clean">
-		<!-- solution configuration="${configuration}" solutionfile="${sourceDir}\NBehave.sln" / -->
-		<exec program="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild" commandline='"NBehave.sln" /v:q /nologo '/>
-		<!--  /t:${solution.target} /p:Configuration=${configuration} -->
+		<exec program="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild.exe" >
+			<arg line="/v:q /nologo /logger:Rodemeyer.MsBuildToCCNet.MsBuildToCCNetLogger,${sourceDir}\Lib\Rodemeyer.MsBuildToCCnet.dll;${artifactsDir}\msbuild.log ${sourceDir}\NBehave.sln" />
+		</exec>
 	</target>
 	<!-- -->
 	<target name="Clean">
@@ -32,7 +33,7 @@
 	<target name="CleanTestResults">
 		<delete>
 			<fileset>
-				<include name="${sourceDir}\..\Artifacts\nunitTestResult\**.xml"/>
+				<include name="${artifactsDir}\**.xml"/>
 			</fileset>
 		</delete>
 	</target>
