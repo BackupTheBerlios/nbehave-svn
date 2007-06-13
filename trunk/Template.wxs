@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	<Product Id="PUT-GUID-HERE" Name="@projectName@ @version@" Version="@version@" Manufacturer="Morgan Persson" Language="1033">
+		<Package Id="????????-????-????-????-????????????" Description="NBehave, A framework for Beahviour Driven Development in .NET" Comments="No comments." InstallerVersion="200" Compressed="yes"/>
+		<Media Id="1" Cabinet="Product.cab" EmbedCab="yes"/>
+		<!-- -->
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="INSTALLLOCATION" Name="@shortName@" LongName="@projectName@">
+					<!-- -->
+					<Directory Id="Bin" Name="Bin">
+						<Component Id="ProductComponent" Guid="PUT-GUID-HERE" DiskId="1">
+							<!-- Files here -->
+						</Component>
+					</Directory>
+					<!-- -->
+					<Directory Id="Examples" Name="Examples">
+						<Directory Id="CSharpExamples" Name="C#">
+							<Component Id="CSharpExamplesProductComponent" Guid="PUT-GUID-HERE" DiskId="1">
+								<!-- Files here -->
+							</Component>
+						</Directory>
+						<!-- -->
+						<Directory Id="VBExamples" Name="VB.NET">
+							<Component Id="VBExamplesProductComponent" Guid="PUT-GUID-HERE" DiskId="1">
+								<!-- Files here -->
+							</Component>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+		<!-- -->
+		<Feature Id="ProductFeature" Title="Main component" Level="1">
+			<ComponentRef Id="ProductComponent"/>
+		</Feature>
+		<Feature Id="CSharpExamplesFeature" Title="C# Examples" Level="1">
+			<ComponentRef Id="CSharpExamplesProductComponent"/>
+		</Feature>
+		<Feature Id="VBExamplesFeature" Title="VB.NET Examples" Level="1">
+			<ComponentRef Id="VBExamplesProductComponent"/>
+		</Feature>
+		<!-- <UIRef Id="WixUI_Minimal" /> -->
+		<!-- Minimal UI -->
+	</Product>
+</Wix>
