@@ -31,7 +31,7 @@
 			<arg value="${Wix.Dir}\WixUI.wixlib"/>
 			<arg line="-loc lib\WixUI_en-us.wxl"/>
 		</exec>
-		<copy file="NBehave.msi" tofile="NBehave ${version}.MSI" />
+		<copy file="NBehave.msi" tofile="NBehave_${version}.MSI" />
 	</target>
 
 	<!-- -->
