@@ -12,23 +12,19 @@
 						<File Id="_LicenseInfo" Name="License.rtf" LongName="license.rtf" src="license.rtf" Vital="yes" DiskId="1"/>
 					</Component>
 					<Directory Id="Bin" Name="Bin">
-						<Component Id="ProductComponent" Guid="PUT-GUID-HERE" DiskId="1">
+						<Component Id="ProductComponent" Guid="2BD23D87-02B8-4676-B43B-33B2F5FC88BD" DiskId="1">
 							<!-- Files here -->
 						</Component>
 					</Directory>
 					<!-- -->
 					<Directory Id="Examples" Name="Examples">
-						<Directory Id="CSharpExamples" Name="C#">
-							<Component Id="CSharpExamplesProductComponent" Guid="PUT-GUID-HERE" DiskId="1">
-								<!-- Files here -->
+							<Component Id="CSharpExamplesProductComponent" Guid="64724F65-E736-4faf-ADDC-161FBDF6042F" DiskId="1">
+								<File Id="_CSExamples" Name="CSEx.zip" LongName="CSExamples.zip" src="CSExamples.zip" Vital="yes" DiskId="1"/>
 							</Component>
-						</Directory>
 						<!-- -->
-						<Directory Id="VBExamples" Name="VB.NET">
-							<Component Id="VBExamplesProductComponent" Guid="PUT-GUID-HERE" DiskId="1">
-								<!-- Files here -->
+							<Component Id="VBExamplesProductComponent" Guid="D44B2FF3-2781-49eb-8363-084E4B1FF050" DiskId="1">
+								<File Id="_VBExamples" Name="VBEx.zip" LongName="VBExamples.zip" src="VBExamples.zip" Vital="yes" DiskId="1"/>
 							</Component>
-						</Directory>
 					</Directory>
 				</Directory>
 			</Directory>
@@ -37,21 +33,20 @@
 		<UI>
 		</UI>
 		<!-- -->
-		<Feature Id="Complete" Description="NBehave, the lot" Display="expand" ConfigurableDirectory="INSTALLLOCATION" Level="1">
-			<Feature Id="ProductFeature" Title="Main component" Description="NBehave core component(s)" Level="1">
+		<Feature Id="Complete" Title="NBehave" Description="NBehave" Display="expand" ConfigurableDirectory="INSTALLLOCATION" Level="1">
+			<Feature Id="ProductFeature" Title="Main component" Description="NBehave core component(s)" Display="expand" Level="1">
 				<ComponentRef Id="ProductComponent"/>
 				<ComponentRef Id="LicenseComponent"/>
 			</Feature>
-			<Feature Id="CSharpExamplesFeature" Title="C# Examples" Description="C# Example code" Display="expand" Level="100">
+			<Feature Id="CSharpExamplesFeature" Title="C# Examples" Description="C# Example code" Display="expand" Level="1">
 				<ComponentRef Id="CSharpExamplesProductComponent"/>
 			</Feature>
-			<Feature Id="VBExamplesFeature" Title="VB.NET Examples" Description="VB.Net Example code" Display="expand" Level="100">
+			<Feature Id="VBExamplesFeature" Title="VB.NET Examples" Description="VB.Net Example code" Display="expand" Level="1">
 				<ComponentRef Id="VBExamplesProductComponent"/>
 			</Feature>
 		</Feature>
 		<UIRef Id="WixUI_FeatureTree"/>
 		<UIRef Id="WixUI_ErrorProgressText"/>
-
 		<!-- <UIRef Id="WixUI_Minimal" /> -->
 		<!-- Minimal UI -->
 	</Product>

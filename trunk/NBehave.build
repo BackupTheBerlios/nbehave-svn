@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="NBehave">
+	<include buildfile="MSI.build" />
 	<!-- -->
 	<property name="sourceDir" value="${directory::get-current-directory()}"/>
 	<property name="artifactsDir" value="${directory::get-current-directory()}\Artifacts"/>
@@ -7,13 +8,14 @@
 	<property name="solution.target" value="Debug"/>
 	<echo message="srcDir: ${sourceDir}"/>
 	<!-- -->
-	<target name="Build" depends="Msi">		
+	<target name="build" depends="msi">		
 	</target>
 	<!-- -->
-	<target name="Msi" depends="Test">
+	<target name="msi" depends="test">
+		<call target="buildMSI" />
 	</target>
 	<!-- -->
-	<target name="Test" depends="Compile">
+	<target name="test" depends="compile">
 		<nunit2>
 			<formatter type="Xml" usefile="false"/>
 			<!-- extension=".xml" outputdir="${artifactsDir}" -->
@@ -21,7 +23,7 @@
 		</nunit2>
 	</target>
 	<!-- -->
-	<target name="Compile" depends="Setup, setVersion">
+	<target name="compile" depends="setup, setVersion">
 		<exec program="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild.exe">
 			<arg line="/v:q /nologo /logger:Rodemeyer.MsBuildToCCNet.MsBuildToCCNetLogger,${sourceDir}\Lib\Rodemeyer.MsBuildToCCnet.dll;${artifactsDir}\msbuild.log ${sourceDir}\NBehave.sln"/>
 		</exec>
@@ -71,13 +73,13 @@
 		</foreach>
 	</target>
 	<!-- -->
-	<target name="Setup">
-		<call target="CleanTestResults"/>
-		<call target="CleanSource"/>
+	<target name="setup">
+		<call target="cleanTestResults"/>
+		<call target="cleanSource"/>
 		<mkdir  dir="${artifactsDir}" if="${not directory::exists('artifactsDir')}" />
 	</target>
 	<!-- -->
-	<target name="CleanTestResults">
+	<target name="cleanTestResults">
 		<delete>
 			<fileset>
 				<include name="${artifactsDir}\**.xml"/>
@@ -85,7 +87,7 @@
 		</delete>
 	</target>
 	<!-- -->
-	<target name="CleanSource">
+	<target name="cleanSource">
 		<delete>
 			<fileset>
 				<include name="${sourceDir}\**\bin\**"/>

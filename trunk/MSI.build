@@ -1,95 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="NBehaveMSI">
 	<loadtasks assembly="Lib\Macaw.XmlList.dll"/>
+	<property name="sourceDir" value="${directory::get-current-directory()}"/>
 	<property name="Wix.Dir" value="C:\Program Files\Windows Installer XML\bin"/>
 	<!--WiX: http://wix.sourceforge.net/ -->
-	<target name="buildWix">
-		<property name="wixFile" value="NBehave"/>
-		<!-- <property name="version" value="${CCNetLabel}" />		 -->
-		<property name="version" value="0.1.1"/>
-		<!--		-->
-		<property name="projectName" value="NBehave"/>
-		<property name="shortName" value="NB"/>
-		<!--		-->
-		<call target="setupNewWixFile"/>
-		<call target="setGuids"/>
-		<call target="FileTemplate"/>
-		<!-- Setup templateFile -->
-		<call target="binFiles"/>
-		<call target="CSharpExamples"/>
-		<call target="VBExamples"/>
-		<call target="buildInstaller"/>
-		<delete file="${wixFile}.wixobj" />
-		<!-- <delete file="${wixFile}.wxs" /> -->
+	<property name="wixFile" value="NBehave"/>
+	<property name="version" value="0.1.0"/>
+	<!--		-->
+	<property name="projectName" value="NBehave"/>
+	<property name="shortName" value="NB"/>
+	<!--		-->
+	<target name="buildMSI" depends="buildInstaller">
+		<delete>
+			<fileset>
+				<include name="*.zip"/>
+				<include name="${wixFile}.wixobj"/>
+			</fileset>
+		</delete>
 	</target>
 	<!-- -->
-	<target name="CSharpExamples">
-		<property name="__componentId" value="CSharpExamples_ProductComponent"/>
-		<property name="__xpathParam" value="/x:Wix/x:Product/x:Directory/x:Directory/x:Directory/x:Directory/x:Directory[@Id='CSharpExamples']/x:Component"/>
-		<property name="__projectFile" value="Examples.CS.csproj"/>
-		<property name="__projectFolder" value="Examples.CS"/>
-		<call target="Examples" />
+	<target name="buildInstaller" depends="binFiles, zip">
+		<sysinfo/>
+		<exec program="${Wix.Dir}\candle.exe">
+			<arg value="${wixFile}.wxs"/>
+		</exec>
+		<exec program="${Wix.Dir}\light.exe">
+			<arg line="-out ${wixFile}.MSI"/>
+			<arg value="${wixFile}.wixobj"/>
+			<arg value="${Wix.Dir}\sca.wixlib"/>
+			<arg value="${Wix.Dir}\WixUI.wixlib"/>
+			<arg line="-loc lib\WixUI_en-us.wxl"/>
+		</exec>
+		<copy file="NBehave.msi" tofile="NBehave ${version}.MSI" />
 	</target>
+
 	<!-- -->
-	<target name="VBExamples">
-		<property name="__componentId" value="VBExamples_ProductComponent"/>
-		<property name="__xpathParam" value="/x:Wix/x:Product/x:Directory/x:Directory/x:Directory/x:Directory/x:Directory[@Id='VBExamples']/x:Component"/>
-		<property name="__projectFile" value="Examples.VB.vbproj"/>
-		<property name="__projectFolder" value="Examples.VB"/>
-		<call target="Examples" />
-		<!-- VB has some extra files, see tag EmbeddedResource and tag None in vbproj file -->
-		<!-- -->
-	</target>
-	<!-- -->
-	<target name="Examples">
-		<property name="__componentIdGuid" value="guid"/>
-		<property name="__paramName" value="__componentIdGuid"/>
-		<call target="setGuid"/>
-		<echo message="+++++++++++++++++++++++++++++++" />
-		<property name="xpath" value="${__xpathParam}/@Guid"/>
-		<property name="xmlValue" value="${__componentIdGuid}"/>
-		<call target="doXML"/>
-		<!-- -->
-		<echo message="========================================================================"/>
-		<xmllist property="__contentFiles" delim="," xpath="//x:Compile/@Include" file="${__projectFolder}\${__projectFile}">
-			<namespaces>
-				<namespace prefix="x" uri="http://schemas.microsoft.com/developer/msbuild/2003"/>
-			</namespaces>
-		</xmllist>
-		<property name="__param" value="${__projectFolder}\${__projectFile}"/>
-		<call target="FixWixFile"/>
-		<property name="__allFiles" value="${__returnValue}"/>
-		<!-- -->
-		<foreach item="String" property="file" delim="," in="${__contentFiles}">
-			<do>
-				<property name="__param" value="${__projectFolder}\${file}"/>
-				<call target="FixWixFile"/>
-				<property name="__allFiles" value="${ __allFiles + __returnValue}"/>
-			</do>
-		</foreach>
-		<property name="xpath" value="${__xpathParam}"/>
-		<property name="xmlValue" value="${__allFiles}"/>
-		<call target="doXML"/>
-		<echo message="========================================================================"/>
-	</target>
-	<!-- -->
-	<target name="FixWixFile">
-		<echo message="FixWixFile got ${__param}" />
-		<property name="__returnValue" value="" />
-		<!-- remove illegal chars -->
-		<property name="__WixFileId" value="${string::replace(__param, '\', '_' )}"/>
-		<property name="__WixFileId" value="${string::replace(__WixFileId, ' ', '_' )}"/>
-		<!-- create xml tag -->
-		<property name="__wixFile" value="${string::replace(fileTemplate, '@id@', __WixFileId )}"/>
-		<property name="__wixFile" value="${string::replace(__wixFile, '@name@', 'Foo.dll')}"/>
-		<!-- Must be a valid 8.3 filename -->
-		<property name="__wixFile" value="${string::replace(__wixFile, '@sourceFile@',  __param )}"/>
-		<property name="__wixFile" value="${string::replace(__wixFile, '@vital@', 'no')}"/>
-		<property name="__returnValue" value="${ __returnValue + __wixFile}"/>
-		<echo message="FixWixFile returns ${__returnValue}" />
-	</target>
-	<!-- -->
-	<target name="binFiles">
+	<target name="binFiles" depends="setupNewWixFile, fileTemplate, setProductID">
 		<!-- -->
 		<property name="Component_ProductComponent" value="guid"/>
 		<property name="__paramName" value="Component_ProductComponent"/>
@@ -109,7 +55,28 @@
 		<call target="doXML"/>
 	</target>
 	<!-- -->
-	<target name="FileTemplate">
+	<target name="setupNewWixFile" depends="version">
+		<property name="WixTemplateFile" value="Template.wxs"/>
+		<property name="outWixFile" value="${wixFile}.wxs"/>
+		<copy file="${WixTemplateFile}" tofile="${outWixFile}" overwrite="true">
+			<filterchain>
+				<replacetokens>
+					<token key="projectName" value="${projectName}"/>
+					<token key="version" value="${version}"/>
+					<token key="shortName" value="${shortName}"/>
+				</replacetokens>
+			</filterchain>
+		</copy>
+	</target>
+	<!-- -->
+	<target name="version">
+		<if test="${property::exists('CCNetLabel')}">
+			<property name="version" value="${CCNetLabel}"/>
+		</if>
+	</target>	
+	<!-- -->
+	<target name="fileTemplate">
+		<!-- -->
 		<property name="fileTemplate" value="programming in xml sucks"/>
 		<script language="VB" prefix="SetFileTemplate">
 			<imports>
@@ -124,21 +91,7 @@
 		</script>
 	</target>
 	<!-- -->
-	<target name="setupNewWixFile">
-		<property name="WixTemplateFile" value="Template.wxs"/>
-		<property name="outWixFile" value="${wixFile}.wxs"/>
-		<copy file="${WixTemplateFile}" tofile="${outWixFile}" overwrite="true">
-			<filterchain>
-				<replacetokens>
-					<token key="projectName" value="${projectName}"/>
-					<token key="version" value="${version}"/>
-					<token key="shortName" value="${shortName}"/>
-				</replacetokens>
-			</filterchain>
-		</copy>
-	</target>
-	<!-- -->
-	<target name="setGuids">
+	<target name="setProductID">
 		<property name="ProductID" value="guid"/>
 		<property name="__paramName" value="productID"/>
 		<call target="setGuid"/>
@@ -146,20 +99,6 @@
 		<property name="xmlValue" value="${productID}"/>
 		<call target="doXML"/>
 		<!-- -->
-	</target>
-	<!-- -->
-	<target name="buildInstaller">
-		<sysinfo/>
-		<exec program="${Wix.Dir}\candle.exe">
-			<arg value="${wixFile}.wxs"/>
-		</exec>
-		<exec program="${Wix.Dir}\light.exe">
-			<arg line="-out ${wixFile}.MSI"/>
-			<arg value="${wixFile}.wixobj"/>
-			<arg value="${Wix.Dir}\sca.wixlib"/>
-			<arg value="${Wix.Dir}\WixUI.wixlib"/>
-			<arg line="-loc lib\WixUI_en-us.wxl"/> 
-		</exec>
 	</target>
 	<!-- -->
 	<target name="doXML">
@@ -171,7 +110,7 @@
 	</target>
 	<!-- -->
 	<target name="setGuid">
-		<echo message="setGuid: ${__paramName}" />
+		<echo message="setGuid: ${__paramName}"/>
 		<script language="VB" prefix="GetGuid">
 			<imports>
 				<import namespace="System.IO"/>
@@ -184,5 +123,34 @@
 						End Sub
 					]]></code>
 		</script>
+	</target>
+	<!-- -->
+	<!-- ZIP stuff -->
+	<!-- -->
+	<target name="zip" depends="vb, cs"/>
+	<!-- -->
+	<target name="cs">
+		<property name="zipFile" value="CSExamples.zip"/>
+		<property name="baseDir" value="${sourceDir}\Examples.CS"/>
+		<property name="prefix" value="Examples/CS"/>
+		<call target="doZip"/>
+	</target>
+	<!-- -->
+	<target name="vb">
+		<property name="zipFile" value="VBExamples.zip"/>
+		<property name="baseDir" value="${sourceDir}\Examples.VB"/>
+		<property name="prefix" value="Examples/VB"/>
+		<call target="doZip"/>
+	</target>
+	<!-- -->
+	<target name="doZip">
+		<zip zipfile="${zipFile}">
+			<fileset basedir="${baseDir}" prefix="${prefix}">
+				<include name="**/*"/>
+				<exclude name="**/bin/**"/>
+				<exclude name="**/obj/**"/>
+				<exclude name="**/_svn/**"/>
+			</fileset>
+		</zip>
 	</target>
 </project>
