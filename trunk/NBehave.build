@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="NBehave">
 	<!-- -->
-	<property name="sourceDir" value="${directory::get-current-directory()}\Source"/>
-	<property name="artifactsDir" value="${directory::get-current-directory()}\Artifacts" />
+	<property name="sourceDir" value="${directory::get-current-directory()}"/>
+	<property name="artifactsDir" value="${directory::get-current-directory()}\Artifacts"/>
 	<property name="configuration" value=""/>
 	<property name="solution.target" value="Debug"/>
+	<echo message="srcDir: ${sourceDir}"/>
 	<!-- -->
-	<target name="Build" depends="Msi">
+	<target name="Build" depends="Msi">		
 	</target>
 	<!-- -->
 	<target name="Msi" depends="Test">
@@ -14,20 +15,66 @@
 	<!-- -->
 	<target name="Test" depends="Compile">
 		<nunit2>
-			<formatter type="Xml" usefile="false" /> <!-- extension=".xml" outputdir="${artifactsDir}" -->
-			<test assemblyname="${sourceDir}\NBehave.Framework.Behaviour\bin\Debug\NBehave.Framework.Behaviour.dll"/>
+			<formatter type="Xml" usefile="false"/>
+			<!-- extension=".xml" outputdir="${artifactsDir}" -->
+			<test assemblyname="${sourceDir}\NBehave.Framework.Behaviour\bin\${solution.target}\NBehave.Framework.Behaviour.dll"/>
 		</nunit2>
 	</target>
 	<!-- -->
-	<target name="Compile" depends="Clean">
-		<exec program="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild.exe" >
-			<arg line="/v:q /nologo /logger:Rodemeyer.MsBuildToCCNet.MsBuildToCCNetLogger,${sourceDir}\Lib\Rodemeyer.MsBuildToCCnet.dll;${artifactsDir}\msbuild.log ${sourceDir}\NBehave.sln" />
+	<target name="Compile" depends="Setup, setVersion">
+		<exec program="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild.exe">
+			<arg line="/v:q /nologo /logger:Rodemeyer.MsBuildToCCNet.MsBuildToCCNetLogger,${sourceDir}\Lib\Rodemeyer.MsBuildToCCnet.dll;${artifactsDir}\msbuild.log ${sourceDir}\NBehave.sln"/>
 		</exec>
 	</target>
 	<!-- -->
-	<target name="Clean">
+	<target name="setVersion">
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="NBehave.Framework/**/AssemblyInfo.vb"/>
+				</items>
+			</in>
+			<do>
+				<echo message="${filename}"/>
+				<script language="VB" prefix="UpdateVersion">
+					<imports>
+						<import namespace="System.IO"/>
+						<import namespace="System.Text.RegularExpressions"/>
+					</imports>
+					<code><![CDATA[
+						Public Shared Sub ScriptMain(ByVal project as Project)
+							Dim ver as String = project.Properties("CCNetLabel")
+							if ver is nothing orelse ver.trim.length=0 then ver="0.1.0"
+							Dim version As New Version(ver)
+							Dim fileName As String = project.Properties("filename")
+							UpdateVersion(fileName, version)
+						End Sub
+						
+						Public Shared Sub UpdateVersion(ByVal fileName As String, ByVal version As Version)
+									Dim sr As StreamReader = New StreamReader(fileName, System.Text.Encoding.Default)
+									Dim fileContent As String = sr.ReadToEnd()
+									sr.Close()
+									
+									Dim versionRegex As Regex = New Regex("AssemblyFileVersion\(""[^""]*""\)")
+									fileContent = versionRegex.Replace(fileContent, "AssemblyFileVersion(""" & version.ToString() & """)")
+									versionRegex = New Regex("AssemblyVersion\(""[^""]*""\)")
+									fileContent = versionRegex.Replace(fileContent, "AssemblyVersion(""" & version.ToString() & """)")
+									
+									Dim sw As StreamWriter = New StreamWriter(fileName, False, System.Text.Encoding.Default)
+									sw.Write(fileContent)
+									sw.Flush()
+									sw.Close()
+						End Sub
+					]]></code>
+				</script>
+			</do>
+		</foreach>
+	</target>
+	<!-- -->
+	<target name="Setup">
 		<call target="CleanTestResults"/>
 		<call target="CleanSource"/>
+		<mkdir  dir="${artifactsDir}" if="${not directory::exists('artifactsDir')}" />
 	</target>
 	<!-- -->
 	<target name="CleanTestResults">

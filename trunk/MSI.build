@@ -2,6 +2,7 @@
 <project name="NBehaveMSI">
 	<loadtasks assembly="Lib\Macaw.XmlList.dll"/>
 	<property name="Wix.Dir" value="C:\Program Files\Windows Installer XML\bin"/>
+	<!--WiX: http://wix.sourceforge.net/ -->
 	<target name="buildWix">
 		<property name="wixFile" value="NBehave"/>
 		<!-- <property name="version" value="${CCNetLabel}" />		 -->
@@ -156,6 +157,8 @@
 			<arg line="-out ${wixFile}.MSI"/>
 			<arg value="${wixFile}.wixobj"/>
 			<arg value="${Wix.Dir}\sca.wixlib"/>
+			<arg value="${Wix.Dir}\WixUI.wixlib"/>
+			<arg line="-loc lib\WixUI_en-us.wxl"/> 
 		</exec>
 	</target>
 	<!-- -->
