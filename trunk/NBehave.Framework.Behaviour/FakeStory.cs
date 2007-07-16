@@ -18,17 +18,14 @@ namespace NBehave.Framework.Behaviour
         public bool didCallSpecify = false;
         public bool didCallRun = false;
 
-        public FakeStory()
-            : base(
-                new Narrative(
-            /* As A */ "Developer",
-            /* I want */ "this to work",
-            /* So that */ "I can move to the next feature"
-                )
-            )
-        { }
 
-        public override void Specify()
+        public override void Story()
+        {
+            AsA("Developer").IWant("this to work").SoThat("I can move to the next feature");
+        }
+
+
+        public override void Scenarios()
         {
             didCallSpecify = true;
             IScenario<SimplestPossibleWorld> scenario = PrepareScenario();

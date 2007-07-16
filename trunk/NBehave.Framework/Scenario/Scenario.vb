@@ -14,11 +14,13 @@ Namespace Scenario
     End Class
 
 
-    Public MustInherit Class Scenario(Of T)
+
+    Public MustInherit Class Scenario(Of T As Class)
         Implements FluentInterface.IGiven(Of T)
         Implements FluentInterface.IEvent(Of T)
         Implements FluentInterface.IOutcome(Of T)
         Implements IScenario(Of T)
+
 
 
         Public MustOverride Sub Specify() Implements IScenario(Of T).Specify
@@ -111,6 +113,7 @@ Namespace Scenario
         End Function
 
 
+
         Private Function [When](ByVal theEvent As World.[IEvent](Of T)) As FluentInterface.IEvent(Of T) Implements FluentInterface.IGiven(Of T).When
             _event = theEvent
             Return Me
@@ -125,6 +128,9 @@ Namespace Scenario
 #End Region
 
 
+        Public Function Given1(ByVal nameOfGiven As String, ByVal valueOfGiven As T, ByVal theGiven As IScenario(Of T).AGiven(Of T)) As FluentInterface.IGiven(Of T) Implements IScenario(Of T).Given
+            Throw New NotImplementedException
+        End Function
     End Class
 
 

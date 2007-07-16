@@ -8,12 +8,12 @@ Imports NBehave.Framework.Scenario
 
 Namespace Story
 
-    Public Class ScenarioCollection(Of T)
+    Public Class ScenarioCollection(Of T As Class)
         Inherits Collection(Of IScenario(Of T))
 
     End Class
 
-    Public Class ReadonlyScenarioCollection(Of T)
+    Public Class ReadonlyScenarioCollection(Of T As Class)
         Inherits ReadOnlyCollection(Of IScenario(Of T))
 
         Sub New(ByVal list As ScenarioCollection(Of T))
@@ -23,25 +23,29 @@ Namespace Story
     End Class
 
 
-    Public MustInherit Class Story(Of T)
+    Public MustInherit Class Story(Of T As Class)
         Implements IStory(Of T)
 
-        Public MustOverride Sub Specify() Implements IStory(Of T).Specify
+        Public MustOverride Sub Scenarios() Implements IStory(Of T).Scenarios
+
 
         Public Event StoryOutcome(ByVal sender As Object, ByVal e As Scenario.OutcomeEventArgs) Implements IStory(Of T).StoryOutcome
 
-        Private _narrative As Narrative
+
+        Private _narrative As Narrative = New Narrative()
         Private _scenarios As New ScenarioCollection(Of T)
 
 
-        Protected Sub New(ByVal narrative As Narrative)
-            _narrative = narrative
-        End Sub
+        ''' <summary>
+        ''' Write yor story here using AsA("...").IWant("...").SoThat("...")
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public MustOverride Sub Story()
 
 
-        Protected Sub New(ByVal asA As String, ByVal iWant As String, ByVal soThat As String)
-            _narrative = New Narrative(asA, iWant, soThat)
-        End Sub
+        Public Function AsA(ByVal role As String) As INarrativeIWant
+            Return _narrative.AsA(role)
+        End Function
 
 
         Public ReadOnly Property Narrative() As Narrative Implements IStory(Of T).Narrative
@@ -56,7 +60,7 @@ Namespace Story
         End Sub
 
 
-        Protected ReadOnly Property Scenarios() As ReadonlyScenarioCollection(Of T) Implements IStory(Of T).Scenarios
+        Protected ReadOnly Property GetScenarios() As ReadonlyScenarioCollection(Of T) Implements IStory(Of T).ScenarioItems
             Get
                 Return New ReadonlyScenarioCollection(Of T)(_scenarios)
             End Get
@@ -74,6 +78,14 @@ Namespace Story
 
         End Sub
 
+
+
+
+        Private _scenario As Scenario.IScenario(Of T)
+
+        Public Function Scenario(ByVal name As String) As Scenario.IScenario(Of T)
+            Return _scenario
+        End Function
 
     End Class
 

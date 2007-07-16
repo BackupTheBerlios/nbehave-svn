@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 	ProjectSection(SolutionItems) = preProject
+		ChangeLog.txt = ChangeLog.txt
 		NBehave.build = NBehave.build
 	EndProjectSection
 EndProject

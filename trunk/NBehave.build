@@ -73,9 +73,7 @@
 		</foreach>
 	</target>
 	<!-- -->
-	<target name="setup">
-		<call target="cleanTestResults"/>
-		<call target="cleanSource"/>
+	<target name="setup" depends="cleanTestResults, cleanSource">
 		<mkdir  dir="${artifactsDir}" if="${not directory::exists('artifactsDir')}" />
 	</target>
 	<!-- -->

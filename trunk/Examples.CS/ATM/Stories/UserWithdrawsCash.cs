@@ -10,15 +10,14 @@ namespace Example.ATM.Stories
 {
     public class UserWithdrawsCash:Story<Domain.IAccount>
     {
-        public UserWithdrawsCash(): base(
-            new Narrative(
-            /*As a */ "Bank card holder",
-            /*I want */ "to be able to withdraw cash from an ATM",
-            /* So that */ "I don't have to visit the bank")) 
-            { }
+        public override void Story()
+        {
+            AsA("Bank card holder").
+            IWant("to be able to withdraw cash from an ATM").
+            SoThat("I don't have to visit the bank");
+        }
 
-
-        public override void Specify()
+        public override void Scenarios()
         {
             AddScenario(new HappyScenario());
             //AddScenario(new HappyScenarioThatFails()); 

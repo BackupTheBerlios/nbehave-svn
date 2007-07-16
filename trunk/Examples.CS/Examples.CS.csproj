@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ATM\BetterLookingStory.cs" />
     <Compile Include="ATM\Domain\IAccount.cs" />
     <Compile Include="ATM\Events\UserRequestsCash.cs" />
     <Compile Include="ATM\Givens\AccountIsInCredit.cs" />

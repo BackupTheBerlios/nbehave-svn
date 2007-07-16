@@ -6,16 +6,14 @@ Imports NBehave.Framework.Scenario
 Namespace Story
 
 
-    Public Interface IStory(Of T)
+    Public Interface IStory(Of T As Class)
         ReadOnly Property Narrative() As Narrative
         Sub AddScenario(ByVal scenario As IScenario(Of T))
-        Sub Specify()
+        Sub Scenarios()
         Sub Run()
         Event StoryOutcome As EventHandler(Of OutcomeEventArgs)
 
-
-        ReadOnly Property Scenarios() As ReadonlyScenarioCollection(Of T)
-
+        ReadOnly Property ScenarioItems() As ReadonlyScenarioCollection(Of T)
 
     End Interface
 

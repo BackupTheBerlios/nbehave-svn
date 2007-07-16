@@ -18,6 +18,8 @@ namespace NBehave.Framework.Behaviour
     public class ScenarioBehaviour
     {
 
+
+
         // Our Scenario to play with
         public class MyScenario:Scenario<SimplestPossibleWorld>
         {

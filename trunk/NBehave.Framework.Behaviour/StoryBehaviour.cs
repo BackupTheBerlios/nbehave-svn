@@ -17,15 +17,14 @@ namespace NBehave.Framework.Behaviour
 
         public class AStory : Story<SimplestPossibleWorld>
         {
-            public AStory() : base(
-                new Narrative(
-                    /* As a */ "Developer",
-                    /* I want */ "a BDD framework for .NET", 
-                    /* So that */ "I can define the behaviour of my code"
-                )
-            ) { }
 
-            public override void Specify()
+
+            public override void Story()
+            {
+                AsA("Developer").IWant("a BDD framework for .NET").SoThat("I can define the behaviour of my code");
+            }
+
+            public override void Scenarios()
             {
                 throw new Exception("The method or operation is not implemented.");
             }
@@ -39,13 +38,18 @@ namespace NBehave.Framework.Behaviour
         [Test]
         public void StoryShouldHaveNarrative()
         {
-            //Given, When 
-            Story<SimplestPossibleWorld> story = new AStory();
-            string outcome = "As a: Developer" + Environment.NewLine +
-                            "I want: a BDD framework for .NET" + Environment.NewLine +
-                            "So that: I can define the behaviour of my code";
+            //Given 
+            Story<SimplestPossibleWorld> theStory = new AStory();
+            const string user = "Developer";
+            const string feature = "a BDD framework for .NET";
+            const string benefit = "I can define the behaviour of my code";
+
+            string outcome = string.Format("As a: {1}{0}I want: {2}{0}So that: {3}", Environment.NewLine, user, feature, benefit);
+            //When
+            theStory.AsA(user).IWant(feature).SoThat(benefit);
+
             //Then
-            Assert.AreEqual(outcome, story.Narrative.Text);
+            Assert.AreEqual(outcome, theStory.Narrative.ToString());
         }
 
         [Test]
@@ -60,7 +64,7 @@ namespace NBehave.Framework.Behaviour
             story.AddScenario(scenario);
 
             //Then
-            Assert.AreEqual(1, story.Scenarios.Count);
+            Assert.AreEqual(1, story.ScenarioItems.Count);
         }
 
 

@@ -8,7 +8,7 @@ Imports NBehave.Framework.Story
 
 Namespace Story
 
- 
+
 
     'TODO: pass in an assembly and find all Stories in it.
     'probably another class should handle that...
@@ -85,7 +85,7 @@ Namespace Story
                 Try
                     evtInfo.AddEventHandler(aStory, storyDelegate)
 
-                    Dim miSpecify As Reflection.MethodInfo = aStory.GetType.GetMethod("Specify")   'Should probably Invoke Istory<T>.Run
+                    Dim miSpecify As Reflection.MethodInfo = aStory.GetType.GetMethod("Scenarios")   'Should probably Invoke Istory<T>.Run
                     miSpecify.Invoke(aStory, Nothing)
 
                     Dim miRun As Reflection.MethodInfo = aStory.GetType.GetMethod("Run")   'Should probably Invoke Istory<T>.Run
