@@ -46,6 +46,9 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ATM\Domain\IAccount.vb" />
+    <Compile Include="ATM\Givens\AccountIsInCredit.vb" />
+    <Compile Include="ATM\UserWithdrawsCash.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

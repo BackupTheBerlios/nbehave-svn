@@ -10,8 +10,8 @@ Namespace Story
         ReadOnly Property Narrative() As Narrative
         Sub AddScenario(ByVal scenario As IScenario(Of T))
         Sub Scenarios()
-        Sub Run()
-        Event StoryOutcome As EventHandler(Of OutcomeEventArgs)
+        Function Run() As Outcome
+        Event ScenarioOutcome As EventHandler(Of NBehaveEventArgs)
 
         ReadOnly Property ScenarioItems() As ReadonlyScenarioCollection(Of T)
 

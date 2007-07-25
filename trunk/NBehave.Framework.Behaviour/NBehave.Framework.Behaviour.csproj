@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="EnsureBehaviour.cs" />
     <Compile Include="FakeStory.cs" />
+    <Compile Include="FullTextRunnerBehaviour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScenarioBehaviour.cs" />
     <Compile Include="SimplestPossibleWorld.cs" />

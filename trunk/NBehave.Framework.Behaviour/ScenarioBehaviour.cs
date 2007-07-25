@@ -171,7 +171,7 @@ namespace NBehave.Framework.Behaviour
             IWorldOutcome<SimplestPossibleWorld> outcome = mocks.NewMock<IWorldOutcome<SimplestPossibleWorld>>();
             Expect.Once.On(outcome).Method("Verify").With(world);
 
-            ScenarioOutcome outcomeResult = new ScenarioOutcome(true, "Cool");
+            Outcome outcomeResult = new Outcome(true, "Cool");
             Expect.Once.On(outcome).GetProperty("Result").Will(Return.Value(outcomeResult));
 
             WorldOutcomeCollection<SimplestPossibleWorld> lst = new WorldOutcomeCollection<SimplestPossibleWorld>();
@@ -203,7 +203,7 @@ namespace NBehave.Framework.Behaviour
 
             IWorldOutcome<SimplestPossibleWorld> outcome = mocks.NewMock<IWorldOutcome<SimplestPossibleWorld>>();
             Expect.Once.On(outcome).Method("Verify").With(world);
-            Expect.Once.On(outcome).GetProperty("Result").Will(Return.Value(new ScenarioOutcome(true, "Cool")));
+            Expect.Once.On(outcome).GetProperty("Result").Will(Return.Value(new Outcome(true, "Cool")));
             WorldOutcomeCollection<SimplestPossibleWorld> outcomeCollection = new WorldOutcomeCollection<SimplestPossibleWorld>();
             outcomeCollection.Add(outcome);
 

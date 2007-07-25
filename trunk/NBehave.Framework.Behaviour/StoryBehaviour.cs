@@ -29,9 +29,6 @@ namespace NBehave.Framework.Behaviour
                 throw new Exception("The method or operation is not implemented.");
             }
 
-            // Should I have to override some methods in the baseclass (the ones commented out)
-            // and test the result of that
-            // in the tests below ?
         }
 
 
@@ -44,7 +41,7 @@ namespace NBehave.Framework.Behaviour
             const string feature = "a BDD framework for .NET";
             const string benefit = "I can define the behaviour of my code";
 
-            string outcome = string.Format("As a: {1}{0}I want: {2}{0}So that: {3}", Environment.NewLine, user, feature, benefit);
+            string outcome = string.Format("As a {1}{0}I want {2}{0}So that {3}", Environment.NewLine, user, feature, benefit);
             //When
             theStory.AsA(user).IWant(feature).SoThat(benefit);
 
@@ -69,8 +66,6 @@ namespace NBehave.Framework.Behaviour
 
 
 
-
-
         [Test]
         public void ShouldRunStorySuccessfully()
         {
@@ -84,7 +79,7 @@ namespace NBehave.Framework.Behaviour
 
             story.AddScenario(scenario);
 
-            Expect.Once.On(scenario).Method("Run");
+            Expect.Once.On(scenario).Method("Run").Will(Return.Value(new Outcome(true , "yadda yadda")));
 
             //When
             story.Run();

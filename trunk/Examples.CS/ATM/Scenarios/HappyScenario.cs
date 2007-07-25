@@ -13,7 +13,7 @@ using NMock2;
 
 namespace Example.ATM.Scenarios
 {
-    class HappyScenario:Scenario<Domain.IAccount>
+    class HappyScenario:Scenario<IAccount>
     {
         override public void Specify()
         {

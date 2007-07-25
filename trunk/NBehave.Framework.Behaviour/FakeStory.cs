@@ -33,10 +33,10 @@ namespace NBehave.Framework.Behaviour
         }
 
 
-        override public void Run()
+        override public Outcome Run()
         {
             didCallRun = true;
-            base.Run();
+            return base.Run();
         }
 
         private IScenario<SimplestPossibleWorld> PrepareScenario()
@@ -61,19 +61,30 @@ namespace NBehave.Framework.Behaviour
             Expect.AtLeast(0).On(scenario).GetProperty("World").Will(Return.Value(world));
             Expect.AtLeast(1).On(scenario).Method("Specify");
 
-            List<ScenarioOutcome> l = new List<ScenarioOutcome>();
-            l.Add(new ScenarioOutcome(true, string.Empty));
-            ReadOnlyCollection<ScenarioOutcome> ro = new ReadOnlyCollection<ScenarioOutcome>(l);
-            Expect.AtLeast(1).On(scenario).Method("Run").Will(Return.Value(ro));
+            Outcome o = CreateSuccessfulOutcome();
+            Expect.AtLeast(1).On(scenario).Method("Run").Will(Return.Value(o));
 
             return scenario;
         }
+
+
+        private Outcome CreateSuccessfulOutcome()
+        {
+            Outcome o = new Outcome(true, "cool");
+            Outcome[] oArr = new Outcome[1];
+            oArr[0] = o;
+            o.AddOutcomes(oArr);
+
+            return o;
+        }
+
+
 
         private void SetupWorldOutcome(ref Mockery mocks, ref SimplestPossibleWorld world)
         {
             IWorldOutcome<SimplestPossibleWorld> outcome = mocks.NewMock<IWorldOutcome<SimplestPossibleWorld>>();
             Expect.AtLeast(1).On(outcome).Method("Verify").With(world);
-            Expect.AtLeast(1).On(outcome).GetProperty("Result").Will(Return.Value(new ScenarioOutcome(true, "Cool")));
+            Expect.AtLeast(1).On(outcome).GetProperty("Result").Will(Return.Value(CreateSuccessfulOutcome()));
             WorldOutcomeCollection<SimplestPossibleWorld> outcomeCollection = new WorldOutcomeCollection<SimplestPossibleWorld>();
             outcomeCollection.Add(outcome);
         }

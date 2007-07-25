@@ -22,7 +22,6 @@ Namespace Scenario
         Implements IScenario(Of T)
 
 
-
         Public MustOverride Sub Specify() Implements IScenario(Of T).Specify
         Public MustOverride Function SetupWorld() As T Implements IScenario(Of T).SetupWorld
 
@@ -67,14 +66,15 @@ Namespace Scenario
         ' Running the scenario
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-        Public Function Run() As ReadOnlyCollection(Of ScenarioOutcome) Implements IScenario(Of T).Run
+        Public Function Run() As Outcome Implements IScenario(Of T).Run
+            '_outcomes.Clear()
+
             Specify()
             World = SetupWorld()
             SetupGivens()
             WorldEvent()
-            Dim o As IList(Of ScenarioOutcome) = VerifyOutcomes()
 
-            Return New ReadOnlyCollection(Of ScenarioOutcome)(o)
+            Return VerifyOutcomes()
 
         End Function
 
@@ -91,14 +91,14 @@ Namespace Scenario
         End Sub
 
 
-        Public Function VerifyOutcomes() As ReadOnlyCollection(Of ScenarioOutcome)
-            Dim outcomeResults As IList(Of ScenarioOutcome) = New List(Of ScenarioOutcome)
+        Public Function VerifyOutcomes() As Outcome
+            Dim outcomeResult As New Outcome(True, "")
             For Each o As World.IWorldOutcome(Of T) In _outcomes
                 o.Verify(Me.World)
-                outcomeResults.Add(o.Result)
+                outcomeResult.AddOutcome(o.Result)
             Next
 
-            Return New ReadOnlyCollection(Of ScenarioOutcome)(outcomeResults)
+            Return outcomeResult
 
         End Function
 
@@ -131,6 +131,8 @@ Namespace Scenario
         Public Function Given1(ByVal nameOfGiven As String, ByVal valueOfGiven As T, ByVal theGiven As IScenario(Of T).AGiven(Of T)) As FluentInterface.IGiven(Of T) Implements IScenario(Of T).Given
             Throw New NotImplementedException
         End Function
+
+
     End Class
 
 

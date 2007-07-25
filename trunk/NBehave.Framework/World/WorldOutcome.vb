@@ -10,7 +10,7 @@ Namespace World
         Implements IWorldOutcome(Of T)
 
 
-        Private _result As ScenarioOutcome = New ScenarioOutcome(False, "World not Verified")    ' Set a default result
+        Private _result As Outcome = New Outcome(False, "World not Verified")    ' Set a default result
         Private _ensurer As Ensure(Of T) = New Ensure(Of T)(Me)
 
         Protected MustOverride Sub Verify(ByVal world As T) Implements IWorldOutcome(Of T).Verify
@@ -27,11 +27,11 @@ Namespace World
         End Property
 
 
-        Private Property Result() As ScenarioOutcome Implements IWorldOutcome(Of T).Result
+        Private Property Result() As Outcome Implements IWorldOutcome(Of T).Result
             Get
                 Return _result
             End Get
-            Set(ByVal Value As ScenarioOutcome)
+            Set(ByVal Value As Outcome)
                 _result = Value
             End Set
         End Property

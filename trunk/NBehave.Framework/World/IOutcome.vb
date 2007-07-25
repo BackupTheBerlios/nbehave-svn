@@ -6,7 +6,7 @@ Imports NBehave.Framework.Scenario
 Namespace World
 
     Public Interface IWorldOutcome(Of T)
-        Property Result() As ScenarioOutcome
+        Property Result() As Outcome
         Sub Verify(ByVal world As T)
     End Interface
 

@@ -7,16 +7,10 @@ Namespace Story
 
 
     Public Class StoryEventArgs
-        Inherits EventArgs
+        Inherits NBehaveEventArgs
 
         Private _story As Object
-        Private _outcome As StoryOutcome
 
-        Public ReadOnly Property Outcome() As StoryOutcome
-            Get
-                Return _outcome
-            End Get
-        End Property
 
         Public ReadOnly Property Story() As Object
             Get
@@ -30,9 +24,9 @@ Namespace Story
         End Sub
 
 
-        Public Sub New(ByVal story As Object, ByVal outcome As StoryOutcome)
-            Me._story = story
-            Me._outcome = outcome
+        Public Sub New(ByVal scenario As Object, ByVal outcome As Outcome)
+            MyBase.New(outcome)
+            Me._story = Story
         End Sub
 
     End Class

@@ -8,17 +8,17 @@ Imports system.Threading.Thread
 Namespace Story
 
     Public Class StreamRunner
-        Inherits Story.StoryRunner
+        Inherits StoryRunner
 
         Private ReadOnly SummaryString As String = "Passed: {0}" & Environment.NewLine & "Failed: {1}"
-        Protected Const FailedString As String = "Failed !"
-        Protected Const PassedString As String = "Passed !"
+        Public Const FailedString As String = "Failed !"
+        Public Const PassedString As String = "Passed !"
 
 
         Private _storyCount As Int32
         Private _failCount As Int32
 
-        Private failedStories As New List(Of StoryOutcome)
+        Private failedStories As New List(Of Outcome)
         Private _outStream As IO.StreamWriter
 
 
@@ -62,36 +62,42 @@ Namespace Story
             End Set
         End Property
 
-        Protected Property FailCount() As Int32
+        Public Property FailCount() As Int32
             Get
                 Return _failCount
             End Get
-            Set(ByVal Value As Int32)
+            Protected Set(ByVal Value As Int32)
                 _failCount = Value
             End Set
         End Property
 
 
-        Private Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As StoryEventArgs) Handles Me.RunStart
+        Protected Overridable Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.RunStart
         End Sub
 
-        Private Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles Me.ExecutingStory
+        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.ExecutingStory
             StoryCount += 1
         End Sub
 
-        Private Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles Me.StoryExecuted
-            If e.Outcome.Passed Then
+        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.StoryExecuted
+            WriteResultAfterStoryRun(e.Outcome)
+            If Not e.Outcome.Passed Then
+                failedStories.Add(e.Outcome)
+                FailCount += 1
+            End If
+        End Sub
+
+        Protected Overridable Sub WriteResultAfterStoryRun(ByVal outcome As Outcome)
+            If outcome.Passed Then
                 OutStream.Write(".")
             Else
-                failedStories.Add(e.Outcome)
                 OutStream.Write("x")
-                FailCount += 1
             End If
             OutStream.Flush()
         End Sub
 
 
-        Private Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As StoryEventArgs) Handles Me.RunFinished
+        Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.RunFinished
             OutStream.WriteLine()
             WriteSummary()
             WriteFinalOutcome()
@@ -118,7 +124,7 @@ Namespace Story
 
         Protected Overridable Sub WriteFailures()
             OutStream.WriteLine()
-            For Each failure As StoryOutcome In failedStories
+            For Each failure As Outcome In failedStories
                 OutStream.WriteLine(failure.Message)
             Next
             OutStream.Flush()

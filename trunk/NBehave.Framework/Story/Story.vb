@@ -29,7 +29,9 @@ Namespace Story
         Public MustOverride Sub Scenarios() Implements IStory(Of T).Scenarios
 
 
-        Public Event StoryOutcome(ByVal sender As Object, ByVal e As Scenario.OutcomeEventArgs) Implements IStory(Of T).StoryOutcome
+        Public Event ScenarioOutcome(ByVal sender As Object, ByVal e As NBehaveEventArgs) Implements IStory(Of T).ScenarioOutcome
+        'Public Event ExecutingScenario As EventHandler(Of ScenarioEventArgs)
+        'Public Event ScenarioExecuted As EventHandler(Of ScenarioEventArgs)
 
 
         Private _narrative As Narrative = New Narrative()
@@ -67,25 +69,26 @@ Namespace Story
         End Property
 
 
-        Public Overridable Sub Run() Implements IStory(Of T).Run
 
-            For Each scenario As IScenario(Of T) In _scenarios
-                Dim results As ReadOnlyCollection(Of ScenarioOutcome)
+        Public Overridable Function Run() As Outcome Implements IStory(Of T).Run
+            Dim storyResult As New Outcome(_scenarios.Count > 0, "Must have more than 0 scenarios")
 
-                results = scenario.Run
-                RaiseEvent StoryOutcome(Me, New OutcomeEventArgs(results))
-            Next
+            Try
+                For Each scenario As IScenario(Of T) In _scenarios
+                    Dim scenarioResult As Outcome
+                    scenarioResult = scenario.Run
+                    storyResult.AddOutcomes(scenarioResult.Outcomes)
+                    Dim e As New NBehaveEventArgs(scenarioResult)
+                    RaiseEvent ScenarioOutcome(Me, e)
+                Next
+            Catch ex As Exception
+                Debug.WriteLine(ex.ToString)
+            End Try
 
-        End Sub
+            Return storyResult
 
-
-
-
-        Private _scenario As Scenario.IScenario(Of T)
-
-        Public Function Scenario(ByVal name As String) As Scenario.IScenario(Of T)
-            Return _scenario
         End Function
+
 
     End Class
 

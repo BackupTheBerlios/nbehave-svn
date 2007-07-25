@@ -15,7 +15,7 @@ Namespace Scenario
         Property World() As T
         Sub Specify()
         Function SetupWorld() As T
-        Function Run() As ReadOnlyCollection(Of ScenarioOutcome)
+        Function Run() As Outcome
 
     End Interface
 

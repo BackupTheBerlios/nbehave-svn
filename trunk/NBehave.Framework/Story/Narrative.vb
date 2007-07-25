@@ -48,9 +48,9 @@ Namespace Story
 
         Public Overrides Function ToString() As String
             Return _
-            "As a: " & _role & Environment.NewLine & _
-            "I want: " & _feature & Environment.NewLine & _
-            "So that: " & _benefit
+            "As a " & _role & Environment.NewLine & _
+            "I want " & _feature & Environment.NewLine & _
+            "So that " & _benefit
         End Function
 
         <Obsolete("Use Tostring instead")> _

@@ -23,10 +23,10 @@ Public Class Ensure(Of T)
     End Sub
 
     Public Sub Failure()
-        Failure(New ScenarioOutcome(False, "Failure"))
+        Failure(New Outcome(False, "Failure"))
     End Sub
 
-    Public Sub Failure(ByVal theFailure As ScenarioOutcome)
+    Public Sub Failure(ByVal theFailure As Outcome)
         _outcome.Result = theFailure
     End Sub
 
@@ -38,11 +38,11 @@ Public Class Ensure(Of T)
 
 
     Public Sub IsFalse(ByVal expected As Boolean) Implements IIsSomething.IsFalse
-        _outcome.Result = New ScenarioOutcome(expected = False, String.Format(CurrentThread.CurrentUICulture, "Expected False, but is {0}", expected.ToString))
+        _outcome.Result = New Outcome(expected = False, String.Format(CurrentThread.CurrentUICulture, "Expected False, but is {0}", expected.ToString))
     End Sub
 
     Public Sub IsTrue(ByVal expected As Boolean) Implements IIsSomething.IsTrue
-        _outcome.Result = New ScenarioOutcome(expected = True, String.Format(CurrentThread.CurrentUICulture, "Expected True, but is {0}", expected.ToString))
+        _outcome.Result = New Outcome(expected = True, String.Format(CurrentThread.CurrentUICulture, "Expected True, but is {0}", expected.ToString))
     End Sub
 
 End Class

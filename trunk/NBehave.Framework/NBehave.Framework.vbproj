@@ -50,11 +50,13 @@
     <Compile Include="FluentInterface\IGiven.vb" />
     <Compile Include="FluentInterface\IOutcome.vb" />
     <Compile Include="FluentInterface\IEvent.vb" />
+    <Compile Include="NBehaveEventArgs.vb" />
     <Compile Include="Outcome.vb" />
     <Compile Include="Scenario\IScenario.vb" />
-    <Compile Include="Scenario\ScenarioOutcome.vb" />
-    <Compile Include="Scenario\OutcomeEventArgs.vb" />
+    <Compile Include="Scenario\ScenarioEventArgs.vb" />
     <Compile Include="Story\ConsoleRunner.vb" />
+    <Compile Include="Story\FullTextRunner.Partial.vb" />
+    <Compile Include="Story\FullTextRunner.vb" />
     <Compile Include="Story\StoryEventArgs.vb" />
     <Compile Include="Story\StoryOutcome.vb" />
     <Compile Include="Story\StreamRunner.vb" />
@@ -62,6 +64,7 @@
     <Compile Include="Story\IStory.vb" />
     <Compile Include="Story\Story.vb" />
     <Compile Include="Story\StoryRunner.vb" />
+    <Compile Include="Utility.vb" />
     <Compile Include="World\IGiven.vb" />
     <Compile Include="World\IOutcome.vb" />
     <Compile Include="World\IEvent.vb" />

@@ -55,7 +55,7 @@ namespace NBehave.Framework.Behaviour
             storyRunner.Run();
 
             //Then
-            Assert.IsTrue (storyRunner.GetStoryOutcome().Passed);
+            Assert.IsTrue(storyRunner.GetStoryOutcome().Passed );
             
         }
 
@@ -66,23 +66,13 @@ namespace NBehave.Framework.Behaviour
             //Given
             Mockery mocks = new Mockery();
 
-            // The scenario has no outcome.
-            //IScenario<SimplestPossibleWorld> scenario = (IScenario<SimplestPossibleWorld>)mocks.NewMock<IScenario<SimplestPossibleWorld>>();
-            //Expect.Once.On(scenario).Method("Run").WithNoArguments();
-            //story.AddScenario(scenario);
-
             IStory<SimplestPossibleWorld> story = new FakeStory(); // (IStory<SimplestPossibleWorld>)mocks.NewMock<IStory<SimplestPossibleWorld>>();
-            //Expect.Once.On(story).Method("Specify");
-            //Expect.Once.On(story).Method("Run");
 
             System.Collections.ArrayList stories = new System.Collections.ArrayList();
             stories.Add(story);
 
             StoryRunner storyRunner = new StoryRunner(stories);
 
-            //Expect.Once.On(story).EventAdd("StoryOutcome",
-            //Expect.Once.On(story).Method("Specify").WithNoArguments();
-            //Expect.Once.On(story).Method("Run").WithNoArguments();
             //When
             storyRunner.Run();
 

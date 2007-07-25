@@ -3,29 +3,27 @@ Option Strict On
 Imports System.Collections.ObjectModel
 Imports NBehave.Framework.Scenario
 Imports NBehave.Framework.Story
-
+Imports NBehave.Framework.Utility
 
 
 Namespace Story
-
-
-
     'TODO: pass in an assembly and find all Stories in it.
     'probably another class should handle that...
 
 
     Public Class StoryRunner
 
-        Public Event RunStart As EventHandler(Of StoryEventArgs) ' (ByVal sender As Object, ByVal e As StoryEventArgs)
-        Public Event ExecutingStory As EventHandler(Of StoryEventArgs) ' (ByVal sender As Object, ByVal e As StoryEventArgs) ' (ByVal story As Object)
-        Public Event StoryExecuted As EventHandler(Of StoryEventArgs) ' (ByVal sender As Object, ByVal e As StoryEventArgs) ' (ByVal story As Object, ByVal outcome As Outcome)
-        Public Event RunFinished As EventHandler(Of StoryEventArgs) ' (ByVal sender As Object, ByVal e As StoryEventArgs)
+        Public Event RunStart As EventHandler(Of NBehaveEventArgs)
+        Public Event ExecutingStory As EventHandler(Of NBehaveEventArgs)
+        Public Event StoryExecuted As EventHandler(Of NBehaveEventArgs)
+        Public Event RunFinished As EventHandler(Of NBehaveEventArgs)
+        Public Event ScenarioExecuted As EventHandler(Of NBehaveEventArgs)
 
 
         Private ReadOnly StoryType As Type = GetType(Story(Of ))
 
-        Private stories As IList
-        Private scenarioOutcomes As ReadOnlyCollection(Of ScenarioOutcome)
+        Protected stories As IList
+        Private scenarioOutcomes As ReadOnlyCollection(Of Outcome)
 
 
         Public Sub New()
@@ -78,28 +76,33 @@ Namespace Story
 
             For Each aStory As Object In stories
 
-                RaiseEvent ExecutingStory(Me, New StoryEventArgs(aStory))
-                Dim evtInfo As Reflection.EventInfo = aStory.GetType.GetEvent("StoryOutcome")
-                Dim storyDelegate As System.EventHandler(Of OutcomeEventArgs) = AddressOf StoryResultHandler
+                Dim evtInfoStory As Reflection.EventInfo = aStory.GetType.GetEvent("ScenarioOutcome")
+                Dim storyDelegate As System.EventHandler(Of NBehaveEventArgs) = AddressOf ScenarioResultHandler
+
+                'collect scenario events
+                'Dim evtInfoScenario As Reflection.EventInfo = aStory.GetType.GetEvent("ScenarioExecuted")
+                'Dim scenarioDelegate As System.EventHandler(Of ScenarioEventArgs) = AddressOf ScenarioResultHandler
 
                 Try
-                    evtInfo.AddEventHandler(aStory, storyDelegate)
+                    evtInfoStory.AddEventHandler(aStory, storyDelegate)
+                    'evtInfoScenario.AddEventHandler(aStory, scenarioDelegate)
 
-                    Dim miSpecify As Reflection.MethodInfo = aStory.GetType.GetMethod("Scenarios")   'Should probably Invoke Istory<T>.Run
-                    miSpecify.Invoke(aStory, Nothing)
+                    InitStory(aStory)
+                    AddScenarios(aStory)
 
-                    Dim miRun As Reflection.MethodInfo = aStory.GetType.GetMethod("Run")   'Should probably Invoke Istory<T>.Run
-                    miRun.Invoke(aStory, Nothing)
+                    RaiseEvent ExecutingStory(Me, New StoryEventArgs(aStory))
+                    ExecuteScenariosInStory(aStory)
+                    RaiseEvent StoryExecuted(Me, New StoryEventArgs(aStory, GetStoryOutcome))
 
                 Catch ex As Exception ' ArgumentException
                     Debug.WriteLine(ex.ToString)
 
 
                 Finally
-                    evtInfo.RemoveEventHandler(aStory, storyDelegate)
+                    evtInfoStory.RemoveEventHandler(aStory, storyDelegate)
+                    'evtInfoScenario.RemoveEventHandler(aStory, scenarioDelegate)
                 End Try
 
-                RaiseEvent StoryExecuted(Me, New StoryEventArgs(aStory, GetStoryOutcome))
             Next
 
             RaiseEvent RunFinished(Me, Nothing)
@@ -107,16 +110,35 @@ Namespace Story
         End Sub
 
 
-        Public Function GetStoryOutcome() As StoryOutcome
-            Dim storyOutcome As StoryOutcome = Nothing
+        Private Sub AddScenarios(ByRef aStory As Object)
+            Dim miSpecify As Reflection.MethodInfo = aStory.GetType.GetMethod("Scenarios")   'Should probably Invoke Istory<T>.Run
+            miSpecify.Invoke(aStory, Nothing)
+        End Sub
+
+
+        Private Sub InitStory(ByRef aStory As Object)
+            Dim miNarrative As Reflection.MethodInfo = aStory.GetType.GetMethod("Story")
+            miNarrative.Invoke(aStory, Nothing)
+        End Sub
+
+
+        Private Sub ExecuteScenariosInStory(ByRef aStory As Object)
+            Dim miRun As Reflection.MethodInfo = aStory.GetType.GetMethod("Run")   'Should probably Invoke Istory<T>.Run
+            miRun.Invoke(aStory, Nothing)
+        End Sub
+
+
+
+        Public Function GetStoryOutcome() As Outcome
+            Dim storyOutcome As Outcome = Nothing
 
             If scenarioOutcomes Is Nothing OrElse scenarioOutcomes.Count = 0 Then
-                storyOutcome = New StoryOutcome(Nothing)
+                storyOutcome = New Outcome(False, "No outcomes")
             Else
-                Dim outcomes(scenarioOutcomes.Count - 1) As ScenarioOutcome
+                Dim outcomes(scenarioOutcomes.Count - 1) As Outcome
 
                 scenarioOutcomes.CopyTo(outcomes, 0)
-                storyOutcome = New StoryOutcome(outcomes)
+                storyOutcome = New Outcome(outcomes)
             End If
 
             Return storyOutcome
@@ -125,9 +147,11 @@ Namespace Story
 
 
         'Is called by run, via a Delegate
-        Private Sub StoryResultHandler(ByVal sender As Object, ByVal e As Scenario.OutcomeEventArgs)
-            scenarioOutcomes = e.Outcomes
+        Private Sub ScenarioResultHandler(ByVal sender As Object, ByVal e As NBehaveEventArgs)
+            scenarioOutcomes = e.Outcome.Outcomes
+            RaiseEvent ScenarioExecuted(sender, e)
         End Sub
+
 
     End Class
 

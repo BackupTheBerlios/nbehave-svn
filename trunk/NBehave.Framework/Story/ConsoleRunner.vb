@@ -4,25 +4,30 @@ Namespace Story
 
 
     Public Class ConsoleRunner
-        Inherits StreamRunner
 
+        Dim runner As StreamRunner
 
         Public Sub New()
             Me.New(Reflection.Assembly.GetCallingAssembly)
         End Sub
 
         Public Sub New(ByVal assemblyToParseForStories As Reflection.Assembly)
-            MyBase.New(Console.OpenStandardOutput(), assemblyToParseForStories)
+            runner = New FullTextRunner(Console.OpenStandardOutput(), assemblyToParseForStories)
         End Sub
 
 
-        Protected Overrides Sub WriteFinalOutcome()
-            If FailCount = 0 Then
+        Public Sub Run()
+            runner.Run()
+            WriteFinalOutcome()
+        End Sub
+
+        Protected Sub WriteFinalOutcome()
+            If runner.FailCount = 0 Then
                 Console.ForegroundColor = ConsoleColor.Green
-                Console.Write(PassedString)
+                Console.Write(StreamRunner.PassedString)
             Else
                 Console.ForegroundColor = ConsoleColor.Red
-                Console.Write(FailedString)
+                Console.Write(StreamRunner.FailedString)
             End If
             Console.ResetColor()
         End Sub
