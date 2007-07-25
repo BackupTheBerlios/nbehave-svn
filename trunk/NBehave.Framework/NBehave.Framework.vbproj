@@ -58,7 +58,6 @@
     <Compile Include="Story\FullTextRunner.Partial.vb" />
     <Compile Include="Story\FullTextRunner.vb" />
     <Compile Include="Story\StoryEventArgs.vb" />
-    <Compile Include="Story\StoryOutcome.vb" />
     <Compile Include="Story\StreamRunner.vb" />
     <Compile Include="Story\Narrative.vb" />
     <Compile Include="Story\IStory.vb" />
