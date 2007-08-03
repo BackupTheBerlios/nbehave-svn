@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BehaviourBehaviour.cs" />
     <Compile Include="EnsureBehaviour.cs" />
     <Compile Include="FakeStory.cs" />
     <Compile Include="FullTextRunnerBehaviour.cs" />

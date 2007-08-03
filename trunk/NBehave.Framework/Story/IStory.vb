@@ -7,14 +7,16 @@ Namespace Story
 
 
     Public Interface IStory(Of T As Class)
-        ReadOnly Property Narrative() As Narrative
+        Inherits IStoryBase
         Sub AddScenario(ByVal scenario As IScenario(Of T))
         Sub Scenarios()
+        ReadOnly Property ScenarioItems() As ReadonlyScenarioCollection(Of T)
+    End Interface
+
+    Public Interface IStoryBase
+        ReadOnly Property Narrative() As Narrative
         Function Run() As Outcome
         Event ScenarioOutcome As EventHandler(Of NBehaveEventArgs)
-
-        ReadOnly Property ScenarioItems() As ReadonlyScenarioCollection(Of T)
-
     End Interface
 
 End Namespace

@@ -5,6 +5,10 @@ Imports System.Collections.ObjectModel
 
 Namespace Story
 
+    Public Interface INarrativeAsA
+        Function AsA(ByVal role As String) As INarrativeIWant
+    End Interface
+
     Public Interface INarrativeIWant
         Function IWant(ByVal feature As String) As INarrativeSoThat
     End Interface

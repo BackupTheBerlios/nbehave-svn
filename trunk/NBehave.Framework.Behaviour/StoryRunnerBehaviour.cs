@@ -11,7 +11,7 @@ using NBehave.Framework.Story;
 using NBehave.Framework.Scenario;
 
 
-namespace NBehave.Framework.Behaviour
+namespace NBehave.Framework.BehaviourNUnit
 {
 
     [TestFixture]
@@ -50,12 +50,15 @@ namespace NBehave.Framework.Behaviour
             System.Reflection.Assembly asm = System.Reflection.Assembly.LoadFile( f.DirectoryName  +  "\\Examples.CS.exe");
 
             StoryRunner storyRunner = new StoryRunner(asm);
+            bool storyCalled = false;
+
+            storyRunner.ExecutingStory += delegate(Object sender, NBehaveEventArgs e) { storyCalled = true; };
 
             //When
             storyRunner.Run();
 
-            //Then
-            Assert.IsTrue(storyRunner.GetStoryOutcome().Passed );
+            //Then - Check on how many stories that where executed instead, via the events.
+            Assert.IsTrue(storyCalled);
             
         }
 

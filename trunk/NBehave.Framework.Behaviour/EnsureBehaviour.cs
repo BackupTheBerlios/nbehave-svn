@@ -9,7 +9,7 @@ using NBehave.Framework.Story;
 using NBehave.Framework.Scenario;
 
 
-namespace NBehave.Framework.Behaviour
+namespace NBehave.Framework.BehaviourNUnit
 {
     [TestFixture]
     public class EnsureBehaviour
@@ -33,8 +33,8 @@ namespace NBehave.Framework.Behaviour
             ensure.Failure();
 
             //Then
-            Assert.IsFalse(ensure.Outcome.Result.Passed);
-            Assert.AreEqual("Failure", ensure.Outcome.Result.Message);
+            Assert.IsFalse(ensure.Outcome.Passed);
+            Assert.AreEqual("Failure", ensure.Outcome.Message);
         }
 
 
@@ -49,7 +49,7 @@ namespace NBehave.Framework.Behaviour
             ensure.IsTrue(true);
 
             //Then
-            Assert.IsTrue(ensure.Outcome.Result.Passed);
+            Assert.IsTrue(ensure.Outcome.Passed);
         }
 
 
@@ -64,7 +64,7 @@ namespace NBehave.Framework.Behaviour
             ensure.IsTrue(false);
 
             //Then
-            Assert.IsFalse(ensure.Outcome.Result.Passed);
+            Assert.IsFalse(ensure.Outcome.Passed);
         }
 
 
@@ -80,7 +80,7 @@ namespace NBehave.Framework.Behaviour
             ensure.IsFalse(false);
 
             //Then
-            Assert.IsTrue(ensure.Outcome.Result.Passed);
+            Assert.IsTrue(ensure.Outcome.Passed);
         }
 
 

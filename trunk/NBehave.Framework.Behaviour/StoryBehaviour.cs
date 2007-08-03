@@ -9,7 +9,7 @@ using NBehave.Framework.Story;
 using NBehave.Framework.Scenario;
 
 
-namespace NBehave.Framework.Behaviour
+namespace NBehave.Framework.BehaviourNUnit
 {
     [TestFixture]
     public class StoryBehaviour

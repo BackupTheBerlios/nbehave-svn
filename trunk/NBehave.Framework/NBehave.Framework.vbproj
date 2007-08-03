@@ -46,6 +46,8 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviour.vb" />
+    <Compile Include="BehaviourRunner.vb" />
     <Compile Include="Ensure.vb" />
     <Compile Include="FluentInterface\IGiven.vb" />
     <Compile Include="FluentInterface\IOutcome.vb" />
@@ -65,7 +67,6 @@
     <Compile Include="Story\StoryRunner.vb" />
     <Compile Include="Utility.vb" />
     <Compile Include="World\IGiven.vb" />
-    <Compile Include="World\IOutcome.vb" />
     <Compile Include="World\IEvent.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -83,6 +84,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Scenario\Scenario.vb" />
+    <Compile Include="World\IWorldOutcome.vb" />
     <Compile Include="World\WorldOutcome.vb" />
   </ItemGroup>
   <ItemGroup>

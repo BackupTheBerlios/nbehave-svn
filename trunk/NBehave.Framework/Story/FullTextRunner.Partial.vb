@@ -12,10 +12,8 @@ Namespace Story
         Private Sub WriteStoryName()
             Dim story As String = stories.Item(StoryCount).GetType.Name
             story = CamelCaseToNormalSentence(story)
-            OutStream.Write("Story: " + story) 'TODO: Split on capitals, add a space and "decapitalize"
+            OutStream.Write("Story: " + story)
         End Sub
-
-
 
 
         Private Sub WriteStoryNarrative()

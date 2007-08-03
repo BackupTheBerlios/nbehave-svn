@@ -32,6 +32,7 @@ Public Class Outcome
     Public Sub New(ByVal passed As Boolean, ByVal message As String)
         Me._passed = passed
         Me._message = message
+
     End Sub
 
     Public Sub New(ByVal outcomes() As Outcome)

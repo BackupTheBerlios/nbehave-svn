@@ -1,0 +1,6 @@
+0.2.0 Changes
+	Interface IStory has been changed, things have been renamed.
+	FullTextRunner - writes out the full story.
+	
+
+0.1.0 First version

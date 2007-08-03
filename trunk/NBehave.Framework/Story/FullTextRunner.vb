@@ -26,19 +26,16 @@ Namespace Story
         End Sub
 
         Protected Overrides Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            'OutStream.Write("StreamRunnerRunStart")
             MyBase.StreamRunnerRunStart(sender, e)
         End Sub
 
         Protected Overrides Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            'OutStream.Write("StreamRunnerBeforeStoryRun")
             WriteStoryName()
             If printNarrative Then WriteStoryNarrative()
             MyBase.StreamRunnerBeforeStoryRun(sender, e)
         End Sub
 
         Protected Overrides Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            'OutStream.Write("StreamRunnerAfterStoryRun")
             MyBase.StreamRunnerAfterStoryRun(sender, e)
         End Sub
 
@@ -53,21 +50,17 @@ Namespace Story
         End Sub
 
         Protected Overrides Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            'OutStream.Write("StreamRunnerRunFinished")
             MyBase.StreamRunnerRunFinished(sender, e)
         End Sub
 
         Protected Overrides Sub WriteFinalOutcome()
-            'OutStream.Write("WriteFinalOutcome")
             OutStream.Flush()
         End Sub
         Protected Overrides Sub WriteSummary()
-            'OutStream.Write("WriteSummary")
             OutStream.Flush()
         End Sub
 
         Protected Overrides Sub WriteFailures()
-            'OutStream.Write("WriteFailures")
             OutStream.Flush()
         End Sub
     End Class

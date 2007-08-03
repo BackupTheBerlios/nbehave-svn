@@ -11,7 +11,7 @@ using NBehave.Framework.Scenario;
 
 using NMock2;
 
-namespace NBehave.Framework.Behaviour
+namespace NBehave.Framework.BehaviourNUnit
 {
     public class FakeStory : Story<SimplestPossibleWorld>
     {

@@ -7,7 +7,7 @@ using NMock2;
 using NBehave.Framework.Story;
 
 
-namespace NBehave.Framework.Behaviour
+namespace NBehave.Framework.BehaviourNUnit
 {
     [TestFixture]
     public class StreamRunnerBehaviour

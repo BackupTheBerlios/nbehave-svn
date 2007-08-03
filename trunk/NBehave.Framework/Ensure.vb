@@ -12,14 +12,39 @@ Public Interface IIsSomething
 End Interface
 
 
-Public Class Ensure(Of T)
+Public Class EnsureBase(Of T)
     Implements IIsSomething
 
+    Protected _outcome As Outcome ' World.IWorldOutcome(Of T)
 
-    Private _outcome As World.IWorldOutcome(Of T)
+
+    Public Sub IsFalse(ByVal expected As Boolean) Implements IIsSomething.IsFalse
+        Me.Expected(expected, False)
+    End Sub
+
+    Public Sub IsTrue(ByVal expected As Boolean) Implements IIsSomething.IsTrue
+        Me.Expected(expected, True)
+    End Sub
+
+    Private Sub Expected(ByVal expected As Boolean, ByVal compareTo As Boolean)
+        _outcome.Message = String.Format(CurrentThread.CurrentUICulture, "Expected {0}, but is {1}", compareTo.ToString, expected.ToString)
+        _outcome.Passed = (expected = compareTo)
+    End Sub
+
+End Class
+
+
+
+Public Class Ensure(Of T)
+    Inherits EnsureBase(Of T)
+
+    'Added 30/7
+    Public Sub New(ByVal outcome As Outcome)
+        _outcome = outcome
+    End Sub
 
     Public Sub New(ByVal outcome As IWorldOutcome(Of T))
-        _outcome = outcome
+        _outcome = outcome.Result
     End Sub
 
     Public Sub Failure()
@@ -27,22 +52,13 @@ Public Class Ensure(Of T)
     End Sub
 
     Public Sub Failure(ByVal theFailure As Outcome)
-        _outcome.Result = theFailure
+        _outcome = theFailure
     End Sub
 
-    Public ReadOnly Property Outcome() As World.IWorldOutcome(Of T)
+    Public ReadOnly Property Outcome() As Outcome
         Get
             Return _outcome
         End Get
     End Property
-
-
-    Public Sub IsFalse(ByVal expected As Boolean) Implements IIsSomething.IsFalse
-        _outcome.Result = New Outcome(expected = False, String.Format(CurrentThread.CurrentUICulture, "Expected False, but is {0}", expected.ToString))
-    End Sub
-
-    Public Sub IsTrue(ByVal expected As Boolean) Implements IIsSomething.IsTrue
-        _outcome.Result = New Outcome(expected = True, String.Format(CurrentThread.CurrentUICulture, "Expected True, but is {0}", expected.ToString))
-    End Sub
 
 End Class
