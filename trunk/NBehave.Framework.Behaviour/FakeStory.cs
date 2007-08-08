@@ -15,7 +15,7 @@ namespace NBehave.Framework.BehaviourNUnit
 {
     public class FakeStory : Story<SimplestPossibleWorld>
     {
-        public bool didCallSpecify = false;
+        public bool didCallScenarios = false;
         public bool didCallRun = false;
 
 
@@ -27,7 +27,7 @@ namespace NBehave.Framework.BehaviourNUnit
 
         public override void Scenarios()
         {
-            didCallSpecify = true;
+            didCallScenarios = true;
             IScenario<SimplestPossibleWorld> scenario = PrepareScenario();
             AddScenario(scenario);
         }

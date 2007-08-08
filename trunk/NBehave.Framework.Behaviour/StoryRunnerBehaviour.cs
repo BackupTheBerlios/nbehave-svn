@@ -28,10 +28,11 @@ namespace NBehave.Framework.BehaviourNUnit
             //Given
             FakeStory story = new FakeStory(); 
 
-            System.Collections.ArrayList stories = new System.Collections.ArrayList();
-            stories.Add(story);
-            StoryRunner storyRunner = new StoryRunner(stories);
-
+            //System.Collections.ArrayList stories = new System.Collections.ArrayList();
+            //stories.Add(story);
+            //StoryRunner storyRunner = new StoryRunner(stories);
+            StoryRunner storyRunner = new StoryRunner();
+            storyRunner.AddStory(story);
             //When
             storyRunner.Run();
 
@@ -52,7 +53,7 @@ namespace NBehave.Framework.BehaviourNUnit
             StoryRunner storyRunner = new StoryRunner(asm);
             bool storyCalled = false;
 
-            storyRunner.ExecutingStory += delegate(Object sender, NBehaveEventArgs e) { storyCalled = true; };
+            storyRunner.ExecutingStory += delegate(Object sender, StoryEventArgs e) { storyCalled = true; };
 
             //When
             storyRunner.Run();
@@ -67,14 +68,15 @@ namespace NBehave.Framework.BehaviourNUnit
         public void ShouldFailIfScenarioHasZeroOutcomes()
         {
             //Given
-            Mockery mocks = new Mockery();
+            //Mockery mocks = new Mockery();
 
-            IStory<SimplestPossibleWorld> story = new FakeStory(); // (IStory<SimplestPossibleWorld>)mocks.NewMock<IStory<SimplestPossibleWorld>>();
+            //IStory<SimplestPossibleWorld> story = new FakeStory(); // (IStory<SimplestPossibleWorld>)mocks.NewMock<IStory<SimplestPossibleWorld>>();
 
-            System.Collections.ArrayList stories = new System.Collections.ArrayList();
-            stories.Add(story);
+            //System.Collections.ArrayList stories = new System.Collections.ArrayList();
+            //stories.Add(story);
 
-            StoryRunner storyRunner = new StoryRunner(stories);
+            //StoryRunner storyRunner = new StoryRunner(stories);
+            StoryRunner storyRunner = new StoryRunner(System.Reflection.Assembly.GetAssembly(this.GetType()));
 
             //When
             storyRunner.Run();
@@ -84,28 +86,30 @@ namespace NBehave.Framework.BehaviourNUnit
         }
 
 
-        [Test,ExpectedException(typeof(ArgumentException),"story is NULL")]
+        [Test, ExpectedException(typeof(ArgumentException), "assemblyToParseForStories is NULL")]
         public void ShouldNotBePossibleToAddNULL()
         {
             //Given
-            StoryRunner storyRunner = new StoryRunner();
+            StoryRunner storyRunner = new StoryRunner(null);
 
             //When
-            storyRunner.AddStory(null);
+            storyRunner.AddStory<object>(null);
         }
 
-        [Test]
+
+        [Test, ExpectedException(typeof(ArgumentException))]
         public void SHouldNotBePossibleToAddStringAsStory()
         {
             //Given
-            System.Collections.IList lst=new System.Collections.ArrayList();
-            StoryRunner storyRunner = new StoryRunner(lst);
+            //System.Collections.IList lst=new System.Collections.ArrayList();
+            StoryRunner storyRunner = new StoryRunner(System.Reflection.Assembly.GetAssembly(this.GetType()));
+
             string story = "Ths is not a story";
             //When
             storyRunner.AddStory(story);
 
             //Then
-            Assert.AreEqual(0, lst.Count);
+            // we get an exception
         }
     }
 }

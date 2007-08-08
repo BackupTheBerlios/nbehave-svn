@@ -16,7 +16,7 @@ Public Class Utility
             End If
             i += 1
         Loop
-        newText.Append(".")
+        'newText.Append(".")
 
         Return newText.ToString
 

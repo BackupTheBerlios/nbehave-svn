@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ATM\Domain\IAccount.vb" />
-    <Compile Include="ATM\Givens\AccountIsInCredit.vb" />
     <Compile Include="ATM\UserWithdrawsCash.Partial.vb" />
     <Compile Include="ATM\UserWithdrawsCash.vb" />
     <Compile Include="Program.vb" />

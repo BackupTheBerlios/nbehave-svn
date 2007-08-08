@@ -21,7 +21,7 @@ namespace NBehave.Framework.BehaviourNUnit
             //Call Story
             Story();
 
-            Assert.AreEqual("Behaviour should derive story name from calling method.", this.StoryTitle);
+            Assert.IsTrue(this.StoryTitle.StartsWith("Behaviour should derive story name from calling method"));
         }
 
 

@@ -15,31 +15,14 @@ namespace NBehave.Framework.BehaviourNUnit
     public class StoryBehaviour
     {
 
-        public class AStory : Story<SimplestPossibleWorld>
-        {
-
-
-            public override void Story()
-            {
-                AsA("Developer").IWant("a BDD framework for .NET").SoThat("I can define the behaviour of my code");
-            }
-
-            public override void Scenarios()
-            {
-                throw new Exception("The method or operation is not implemented.");
-            }
-
-        }
-
-
         [Test]
         public void StoryShouldHaveNarrative()
         {
             //Given 
-            Story<SimplestPossibleWorld> theStory = new AStory();
+            Story<SimplestPossibleWorld> theStory = new FakeStory();
             const string user = "Developer";
-            const string feature = "a BDD framework for .NET";
-            const string benefit = "I can define the behaviour of my code";
+            const string feature = "this to work";
+            const string benefit = "I can move to the next feature";
 
             string outcome = string.Format("As a {1}{0}I want {2}{0}So that {3}", Environment.NewLine, user, feature, benefit);
             //When
@@ -49,13 +32,14 @@ namespace NBehave.Framework.BehaviourNUnit
             Assert.AreEqual(outcome, theStory.Narrative.ToString());
         }
 
+
         [Test]
         public void ShouldAddScenarioToStory()
         {
             //Given
             Mockery mocks = new Mockery();
             IScenario<SimplestPossibleWorld> scenario = mocks.NewMock<IScenario<SimplestPossibleWorld>>();
-            IStory<SimplestPossibleWorld> story = new AStory();
+            IStory<SimplestPossibleWorld> story = new FakeStory();
 
             //When
             story.AddScenario(scenario);
@@ -72,7 +56,7 @@ namespace NBehave.Framework.BehaviourNUnit
             //Given
             Mockery mocks = new Mockery();
             SimplestPossibleWorld world = new SimplestPossibleWorld();
-            IStory<SimplestPossibleWorld> story = new AStory();
+            IStory<SimplestPossibleWorld> story = new FakeStory();
 
             //Story has scenarios
             IScenario<SimplestPossibleWorld> scenario = mocks.NewMock<IScenario<SimplestPossibleWorld>>();

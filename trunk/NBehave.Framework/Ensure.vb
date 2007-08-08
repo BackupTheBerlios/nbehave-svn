@@ -15,8 +15,17 @@ End Interface
 Public Class EnsureBase(Of T)
     Implements IIsSomething
 
-    Protected _outcome As Outcome ' World.IWorldOutcome(Of T)
+    Private _outcome As Outcome
 
+
+    Public Property Outcome() As Outcome
+        Get
+            Return _outcome
+        End Get
+        Protected Set(ByVal value As Outcome)
+            _outcome = value
+        End Set
+    End Property
 
     Public Sub IsFalse(ByVal expected As Boolean) Implements IIsSomething.IsFalse
         Me.Expected(expected, False)
@@ -38,13 +47,13 @@ End Class
 Public Class Ensure(Of T)
     Inherits EnsureBase(Of T)
 
-    'Added 30/7
+
     Public Sub New(ByVal outcome As Outcome)
-        _outcome = outcome
+        Me.Outcome = outcome
     End Sub
 
     Public Sub New(ByVal outcome As IWorldOutcome(Of T))
-        _outcome = outcome.Result
+        Me.Outcome = outcome.Result
     End Sub
 
     Public Sub Failure()
@@ -52,13 +61,9 @@ Public Class Ensure(Of T)
     End Sub
 
     Public Sub Failure(ByVal theFailure As Outcome)
-        _outcome = theFailure
+        Me.Outcome = theFailure
     End Sub
 
-    Public ReadOnly Property Outcome() As Outcome
-        Get
-            Return _outcome
-        End Get
-    End Property
+
 
 End Class

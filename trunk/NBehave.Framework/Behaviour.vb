@@ -11,9 +11,9 @@ Imports System.Collections.ObjectModel
 Public Delegate Sub Action(Of T)(ByVal value As T)
 
 
-Public Class BehaviourAttribute
-    Inherits Attribute
-End Class
+'Public Class BehaviourAttribute
+'    Inherits Attribute
+'End Class
 
 
 'optional values dont "work" in C#
@@ -49,6 +49,7 @@ Public Class Behaviour 'should probably be named Story
     Implements IScenarioWhen
     Implements IScenarioThen
     Implements IStoryBase
+
 
     Public MustInherit Class GivenWhenThenBase
         Public Description As String
@@ -135,6 +136,11 @@ Public Class Behaviour 'should probably be named Story
         End Get
     End Property
 
+
+
+    Private Sub Story1() Implements Story.IStoryBase.Story
+        Throw New NotImplementedException
+    End Sub
 
     'Runs the 
     Private Function Run() As Outcome Implements IStoryBase.Run
@@ -236,7 +242,6 @@ Public Class Behaviour 'should probably be named Story
     End Function
 
 #End Region
-
 
 
 End Class

@@ -42,7 +42,7 @@ Namespace Story
         ''' Write yor story here using AsA("...").IWant("...").SoThat("...")
         ''' </summary>
         ''' <remarks></remarks>
-        Public MustOverride Sub Story()
+        Public MustOverride Sub Story() Implements IStory(Of T).Story
 
 
         Public Function AsA(ByVal role As String) As INarrativeIWant
@@ -79,7 +79,7 @@ Namespace Story
                     scenarioResult = scenario.Run
                     storyResult.AddOutcomes(scenarioResult.Outcomes)
                     Dim e As New NBehaveEventArgs(scenarioResult)
-                    RaiseEvent ScenarioOutcome(Me, e)
+                    RaiseEvent ScenarioOutcome(scenario, e)
                 Next
             Catch ex As Exception
                 Debug.WriteLine(ex.ToString)

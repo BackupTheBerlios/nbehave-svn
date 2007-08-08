@@ -16,6 +16,7 @@ Namespace Story
     Public Interface IStoryBase
         ReadOnly Property Narrative() As Narrative
         Function Run() As Outcome
+        Sub Story()
         Event ScenarioOutcome As EventHandler(Of NBehaveEventArgs)
     End Interface
 

@@ -9,16 +9,15 @@ Namespace Story
 
     Partial Public Class FullTextRunner
 
-        Private Sub WriteStoryName()
-            Dim story As String = stories.Item(StoryCount).GetType.Name
-            story = CamelCaseToNormalSentence(story)
-            OutStream.Write("Story: " + story)
+        Private Sub WriteStoryName(ByVal story As Object)
+            Dim storyText As String = CamelCaseToNormalSentence(story.GetType.Name)
+            OutStream.WriteLine("Story: " & storyText)
         End Sub
 
 
-        Private Sub WriteStoryNarrative()
-            Dim narrative As String = stories.Item(StoryCount).Narrative.ToString
-            narrative = "   " + narrative.Replace(Environment.NewLine, "." + Environment.NewLine + "   ") + "."
+        Private Sub WriteStoryNarrative(ByVal story As Object)
+            Dim narrative As String = story.Narrative.ToString
+            narrative = "   " & narrative.Replace(Environment.NewLine, "." & Environment.NewLine & "   ") & "."
             OutStream.Write(narrative)
         End Sub
 

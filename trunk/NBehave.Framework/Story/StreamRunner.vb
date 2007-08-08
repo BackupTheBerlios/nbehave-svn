@@ -2,13 +2,15 @@ Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports NBehave.Framework.Scenario
+Imports NBehave.Framework.Utility
 Imports system.Threading.Thread
 
 
 Namespace Story
 
     Public Class StreamRunner
-        Inherits StoryRunner
+        Inherits StoryRunnerBase
+
 
         Private ReadOnly SummaryString As String = "Passed: {0}" & Environment.NewLine & "Failed: {1}"
         Public Const FailedString As String = "Failed !"
@@ -21,22 +23,18 @@ Namespace Story
         Private failedStories As New List(Of Outcome)
         Private _outStream As IO.StreamWriter
 
+        Protected WithEvents storyRunner As StoryRunner
 
-
-        Public Sub New(ByVal outStream As IO.Stream)
-            Me.OutStream = New IO.StreamWriter(outStream)
-        End Sub
-
-        Public Sub New(ByVal outStream As IO.Stream, ByVal stories As IList)
-            MyBase.New(stories)
-            Me.OutStream = New IO.StreamWriter(outStream)
-        End Sub
 
         Public Sub New(ByVal outStream As IO.Stream, ByVal assemblyToParseForStories As Reflection.Assembly)
-            MyBase.New(assemblyToParseForStories)
-            Me.OutStream = New IO.StreamWriter(outStream)
+            Me._outStream = New IO.StreamWriter(outStream)
+            storyRunner = New StoryRunner(assemblyToParseForStories)
         End Sub
 
+
+        Public Overrides Sub Run()
+            storyRunner.Run()
+        End Sub
 
         Protected ReadOnly Property Summary() As String
             Get
@@ -72,20 +70,37 @@ Namespace Story
         End Property
 
 
-        Protected Overridable Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.RunStart
+        Protected Overridable Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunStart
         End Sub
 
-        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.ExecutingStory
+
+        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.ExecutingStory
             StoryCount += 1
         End Sub
 
-        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.StoryExecuted
+        Protected Overridable Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.ScenarioExecuted
+            OutStream.Write("   " & CamelCaseToNormalSentence(sender.GetType.Name))
+            WriteOutcome(e.Outcome)
+            OutStream.WriteLine()
+        End Sub
+
+
+        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.StoryExecuted
             WriteResultAfterStoryRun(e.Outcome)
             If Not e.Outcome.Passed Then
                 failedStories.Add(e.Outcome)
                 FailCount += 1
             End If
         End Sub
+
+        Protected Sub WriteOutcome(ByVal outcome As Outcome)
+            If Outcome.Passed Then
+                OutStream.Write(" --> Passed")
+            Else
+                OutStream.Write(String.Format("  --> Failed - {0}", Outcome.Message))
+            End If
+        End Sub
+
 
         Protected Overridable Sub WriteResultAfterStoryRun(ByVal outcome As Outcome)
             If outcome.Passed Then
@@ -97,7 +112,7 @@ Namespace Story
         End Sub
 
 
-        Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles Me.RunFinished
+        Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunFinished
             OutStream.WriteLine()
             WriteSummary()
             WriteFinalOutcome()
@@ -113,7 +128,6 @@ Namespace Story
                 OutStream.WriteLine(FailedString)
             End If
         End Sub
-
 
 
         Protected Overridable Sub WriteSummary()

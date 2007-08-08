@@ -13,14 +13,6 @@ Namespace Story
         Public PrintNarrative As Boolean = False
 
 
-        Public Sub New(ByVal outStream As IO.Stream)
-            MyBase.New(outStream)
-        End Sub
-
-        Public Sub New(ByVal outStream As IO.Stream, ByVal stories As IList)
-            MyBase.New(outStream, stories)
-        End Sub
-
         Public Sub New(ByVal outStream As IO.Stream, ByVal assemblyToParseForStories As Reflection.Assembly)
             MyBase.New(outStream, assemblyToParseForStories)
         End Sub
@@ -29,25 +21,27 @@ Namespace Story
             MyBase.StreamRunnerRunStart(sender, e)
         End Sub
 
-        Protected Overrides Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            WriteStoryName()
-            If printNarrative Then WriteStoryNarrative()
+        Protected Overrides Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
+            WriteStoryName(e.Story)
+            If PrintNarrative Then WriteStoryNarrative(e.Story)
             MyBase.StreamRunnerBeforeStoryRun(sender, e)
         End Sub
 
-        Protected Overrides Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As NBehaveEventArgs)
+        Protected Overrides Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
             MyBase.StreamRunnerAfterStoryRun(sender, e)
         End Sub
 
+        Protected Overrides Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs)
+            MyBase.StreamRunnerScenarioExecuted(sender, e)
+        End Sub
+
+
         Protected Overrides Sub WriteResultAfterStoryRun(ByVal outcome As Outcome)
-            'OutStream.WriteLine()
-            If outcome.Passed Then
-                OutStream.Write("  --> Passed")
-            Else
-                OutStream.Write(String.Format("  --> Failed - {0}", outcome.Message))
-            End If
+            OutStream.Write("Story outcome")
+            WriteOutcome(outcome)
             OutStream.Flush()
         End Sub
+
 
         Protected Overrides Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs)
             MyBase.StreamRunnerRunFinished(sender, e)
@@ -56,6 +50,7 @@ Namespace Story
         Protected Overrides Sub WriteFinalOutcome()
             OutStream.Flush()
         End Sub
+
         Protected Overrides Sub WriteSummary()
             OutStream.Flush()
         End Sub
@@ -63,6 +58,9 @@ Namespace Story
         Protected Overrides Sub WriteFailures()
             OutStream.Flush()
         End Sub
+
+
     End Class
+
 
 End Namespace

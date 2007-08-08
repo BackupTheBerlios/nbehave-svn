@@ -17,14 +17,12 @@ namespace NBehave.Framework.BehaviourNUnit
         public void ShouldRunStoryAndGetStuffInStream()
         {
             //Given
-            string expected = "." + Environment.NewLine + "Passed: 1" + Environment.NewLine + "Failed: 0" + Environment.NewLine + "Passed !" + Environment.NewLine;
+            string expectToHave = "Passed: 1";
+            string expectToEndWith = "Passed !" + Environment.NewLine;
 
-            FakeStory story = new FakeStory(); // mocks.NewMock<IStory<SimplestPossibleWorld>>();
-
-            System.Collections.ArrayList stories = new System.Collections.ArrayList();
-            stories.Add(story);
+            FakeStory story = new FakeStory();
             Stream sr = new MemoryStream();
-            StreamRunner storyRunner = new StreamRunner(sr, stories);
+            StreamRunner storyRunner = new StreamRunner(sr, System.Reflection.Assembly.GetAssembly(this.GetType()));
 
             //When
             storyRunner.Run();
@@ -32,8 +30,10 @@ namespace NBehave.Framework.BehaviourNUnit
             //Then
             sr.Seek(0, 0);
             TextReader  s = new StreamReader(sr);
-            Assert.AreEqual(expected, s.ReadToEnd());
-        }
+            string result = s.ReadToEnd();
+            Assert.IsTrue(result.Contains(expectToHave));
+            Assert.IsTrue(result.EndsWith(expectToEndWith));
+        }        
 
     }
 }

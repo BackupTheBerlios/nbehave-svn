@@ -24,7 +24,7 @@ Namespace Story
         End Sub
 
 
-        Public Sub New(ByVal scenario As Object, ByVal outcome As Outcome)
+        Public Sub New(ByVal story As Object, ByVal outcome As Outcome)
             MyBase.New(outcome)
             Me._story = Story
         End Sub
