@@ -46,6 +46,8 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviour.FluentScenario.vb" />
+    <Compile Include="Behaviour.FluentStory.vb" />
     <Compile Include="Behaviour.vb" />
     <Compile Include="BehaviourRunner.vb" />
     <Compile Include="Ensure.vb" />
@@ -57,7 +59,6 @@
     <Compile Include="Scenario\IScenario.vb" />
     <Compile Include="Scenario\ScenarioEventArgs.vb" />
     <Compile Include="Story\ConsoleRunner.vb" />
-    <Compile Include="Story\FullTextRunner.Partial.vb" />
     <Compile Include="Story\FullTextRunner.vb" />
     <Compile Include="Story\StoryEventArgs.vb" />
     <Compile Include="Story\StoryRunner.Dynamic.vb" />

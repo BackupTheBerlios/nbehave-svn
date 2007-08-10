@@ -4,7 +4,7 @@ Imports System.Collections.ObjectModel
 
 Imports NBehave.Framework.Story
 Imports NBehave.Framework.Scenario
-
+Imports NBehave.Framework.Utility
 
 Namespace Story
 
@@ -25,6 +25,7 @@ Namespace Story
 
     Public MustInherit Class Story(Of T As Class)
         Implements IStory(Of T)
+
 
         Public MustOverride Sub Scenarios() Implements IStory(Of T).Scenarios
 
@@ -71,8 +72,11 @@ Namespace Story
 
 
         Public Overridable Function Run() As Outcome Implements IStory(Of T).Run
-            Dim storyResult As New Outcome(_scenarios.Count > 0, "Must have more than 0 scenarios")
+            Dim storyResult As New Outcome(OutcomeResult.Passed, "") 'start positive...
 
+            If _scenarios.Count = 0 Then
+                storyResult = New Outcome(OutcomeResult.Failed, "Must have more than 0 scenarios")
+            End If
             Try
                 For Each scenario As IScenario(Of T) In _scenarios
                     Dim scenarioResult As Outcome
@@ -90,6 +94,11 @@ Namespace Story
         End Function
 
 
+        Public ReadOnly Property Description() As String Implements IStoryBase.Title
+            Get
+                Return CamelCaseToNormalSentence(Me.GetType.Name)
+            End Get
+        End Property
     End Class
 
 

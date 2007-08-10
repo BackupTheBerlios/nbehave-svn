@@ -18,7 +18,6 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             string expectToHave = "Passed: 1";
-            string expectToEndWith = "Passed !" + Environment.NewLine;
 
             FakeStory story = new FakeStory();
             Stream sr = new MemoryStream();
@@ -32,7 +31,6 @@ namespace NBehave.Framework.BehaviourNUnit
             TextReader  s = new StreamReader(sr);
             string result = s.ReadToEnd();
             Assert.IsTrue(result.Contains(expectToHave));
-            Assert.IsTrue(result.EndsWith(expectToEndWith));
         }        
 
     }

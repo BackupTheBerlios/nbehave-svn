@@ -82,7 +82,7 @@ namespace NBehave.Framework.BehaviourNUnit
             storyRunner.Run();
 
             //Then
-            Assert.IsFalse(storyRunner.GetStoryOutcome().Passed);
+            Assert.AreEqual(OutcomeResult.Failed, storyRunner.GetStoryOutcome().Result);
         }
 
 

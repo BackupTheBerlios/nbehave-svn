@@ -14,6 +14,7 @@ Namespace Story
     End Interface
 
     Public Interface IStoryBase
+        ReadOnly Property Title() As String
         ReadOnly Property Narrative() As Narrative
         Function Run() As Outcome
         Sub Story()

@@ -17,7 +17,7 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             string expectToStartWith = "Story: Fake story" + Environment.NewLine;
-            string expectToEndWith = "--> Passed" + Environment.NewLine;
+            string expectToContain = "--> Passed" + Environment.NewLine;
 
             FakeStory story = new FakeStory(); // mocks.NewMock<IStory<SimplestPossibleWorld>>();
 
@@ -35,7 +35,7 @@ namespace NBehave.Framework.BehaviourNUnit
             TextReader s = new StreamReader(sr);
             string result = s.ReadToEnd();
             Assert.IsTrue(result.StartsWith(expectToStartWith));
-            Assert.IsTrue(result.EndsWith(expectToEndWith));
+            Assert.IsTrue(result.Contains(expectToContain));
         }
 
     }

@@ -20,8 +20,8 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Call Story
             Story();
-
             Assert.IsTrue(this.StoryTitle.StartsWith("Behaviour should derive story name from calling method"));
+
         }
 
 
@@ -43,6 +43,50 @@ namespace NBehave.Framework.BehaviourNUnit
             Assert.IsNotNull(this.Scenarios[0].Event);
             Assert.AreEqual(1, this.Scenarios[0].Outcomes.Count);
 
+        }
+
+
+
+        [Test]
+        public void aGivenWithNoActionShouldResultInPendingAsOutcome()
+        {
+            Story();
+
+            Scenario("Given with no action").Given("A value",42).
+                When("Something happens",0,delegate(int a) {}).
+                Then("There's an outcome", 0, delegate(int a) { this.Ensure().IsTrue(true); });
+
+            Outcome o = this.Run();
+
+            Assert.AreEqual(OutcomeResult.Pending, o.Result);
+        }
+
+        [Test]
+        public void anEventWithNoActionShouldResultInPendingAsOutcome()
+        {
+            Story();
+
+            Scenario("Given with no action").Given("A value", 42, delegate(int a) { }).
+                When("Something happens", 0).
+                Then("There's an outcome", 0, delegate(int a) { this.Ensure().IsTrue(true); });
+
+            Outcome o = this.Run();
+
+            Assert.AreEqual(OutcomeResult.Pending, o.Result);
+        }
+
+        [Test]
+        public void anOutcomeWithNoActionShouldResultInPendingAsOutcome()
+        {
+            Story();
+            
+            Scenario("Given with no action").Given("A value", 42, delegate(int a) { }).
+                When("Something happens", 0, delegate(int a) { }).
+                Then("There's an outcome", 0);
+
+            Outcome o = this.Run();
+
+            Assert.AreEqual(OutcomeResult.Pending, o.Result);
         }
 
 

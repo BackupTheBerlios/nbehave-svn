@@ -63,7 +63,7 @@ namespace NBehave.Framework.BehaviourNUnit
 
             story.AddScenario(scenario);
 
-            Expect.Once.On(scenario).Method("Run").Will(Return.Value(new Outcome(true , "yadda yadda")));
+            Expect.Once.On(scenario).Method("Run").Will(Return.Value(new Outcome(OutcomeResult.Passed, "yadda yadda")));
 
             //When
             story.Run();

@@ -33,7 +33,7 @@ namespace NBehave.Framework.BehaviourNUnit
             ensure.Failure();
 
             //Then
-            Assert.IsFalse(ensure.Outcome.Passed);
+            Assert.AreEqual(OutcomeResult.Failed, ensure.Outcome.Result);
             Assert.AreEqual("Failure", ensure.Outcome.Message);
         }
 
@@ -49,7 +49,7 @@ namespace NBehave.Framework.BehaviourNUnit
             ensure.IsTrue(true);
 
             //Then
-            Assert.IsTrue(ensure.Outcome.Passed);
+            Assert.AreEqual(OutcomeResult.Passed, ensure.Outcome.Result);
         }
 
 
@@ -64,7 +64,7 @@ namespace NBehave.Framework.BehaviourNUnit
             ensure.IsTrue(false);
 
             //Then
-            Assert.IsFalse(ensure.Outcome.Passed);
+            Assert.AreEqual(OutcomeResult.Failed, ensure.Outcome.Result);
         }
 
 
@@ -80,7 +80,7 @@ namespace NBehave.Framework.BehaviourNUnit
             ensure.IsFalse(false);
 
             //Then
-            Assert.IsTrue(ensure.Outcome.Passed);
+            Assert.AreEqual(OutcomeResult.Passed, ensure.Outcome.Result);
         }
 
 

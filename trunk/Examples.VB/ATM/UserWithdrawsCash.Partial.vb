@@ -14,8 +14,8 @@ Partial Public Class UserWithdrawsCash
     Private _cashAccount As IAccount
     Delegate Sub Balance(ByVal bal As Int32)
 
-
-    Public Overrides Sub Setup()
+    'This is called once for every public function
+    Protected Overrides Sub Setup()
         _account = New Account
         _cashAccount = New Account
     End Sub
@@ -25,13 +25,20 @@ Partial Public Class UserWithdrawsCash
         _account.Balance = newBalance
     End Sub
 
-
     Private Sub SetCashAccountBalance(ByVal newBalance As Int32)
         _cashAccount.Balance = newBalance
     End Sub
 
-    Private Sub VerifyBalance(ByVal expected As Int32)
+    Private Sub TransferMoney(ByVal amount As Int32)
+        _account.Transfer(amount, _cashAccount)
+    End Sub
+
+    Private Sub VerifyAccountBalance(ByVal expected As Int32)
         MyBase.Ensure.IsTrue(_account.Balance = expected)
+    End Sub
+
+    Private Sub VerifyCashAccountBalance(ByVal expected As Int32)
+        MyBase.Ensure.IsTrue(_cashAccount.Balance = expected)
     End Sub
 
 End Class
@@ -52,9 +59,9 @@ Public Class Account
         End Set
     End Property
 
-    Public Sub Withdraw(ByVal amount As Integer) Implements ATM.Domain.IAccount.Withdraw
+
+    Public Sub Transfer(ByVal amount As Integer, ByVal toAccount As ATM.Domain.IAccount) Implements ATM.Domain.IAccount.Transfer
         _balance -= amount
+        toAccount.Balance += amount
     End Sub
-
-
 End Class

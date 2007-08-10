@@ -1,97 +1,70 @@
 Option Strict On
 
+Imports NBehave.Framework.Scenario
 Imports NBehave.Framework.Story
 Imports System.Collections.ObjectModel
 
-
-'TODO
-' A console runner
-' A runner
-
-Public Delegate Sub Action(Of T)(ByVal value As T)
-
-
-'Public Class BehaviourAttribute
-'    Inherits Attribute
-'End Class
-
-
-'optional values dont "work" in C#
-Public Interface IScenarioGiven
-    Function [Given](Of T)(ByVal description As String, ByVal value As T) As IScenarioGivenAnd
-    Function [Given](Of T)(ByVal description As String, ByVal value As T, ByVal theGiven As Action(Of T)) As IScenarioGivenAnd
-    'Function Given(ByVal description As String, ByVal ParamArray stuff() As Object) As IScenarioGivenAnd
-End Interface
-
-Public Interface IScenarioGivenAnd
-    Function [And](Of T)(ByVal description As String, ByVal value As T) As IScenarioGivenAnd
-    Function [And](Of T)(ByVal description As String, ByVal value As T, ByVal given As Action(Of T)) As IScenarioGivenAnd
-    Function [When](Of T)(ByVal description As String, ByVal value As T) As IScenarioWhen
-    Function [When](Of T)(ByVal description As String, ByVal value As T, ByVal [event] As Action(Of T)) As IScenarioWhen
-End Interface
-
-Public Interface IScenarioWhen
-    Function [Then](Of T)(ByVal description As String, ByVal value As T) As IScenarioThen
-    Function [Then](Of T)(ByVal description As String, ByVal value As T, ByVal validator As Action(Of T)) As IScenarioThen
-End Interface
-
-Public Interface IScenarioThen
-    Function [And](Of T)(ByVal description As String, ByVal value As T) As IScenarioThen
-    Function [And](Of T)(ByVal description As String, ByVal value As T, ByVal validator As Action(Of T)) As IScenarioThen
-End Interface
+'TODO: Lot of refactoring, this is ugly...
 
 
 
 Public Class Behaviour 'should probably be named Story
-    Implements INarrativeAsA
-    Implements IScenarioGiven
-    Implements IScenarioGivenAnd
-    Implements IScenarioWhen
-    Implements IScenarioThen
     Implements IStoryBase
 
 
     Public MustInherit Class GivenWhenThenBase
         Public Description As String
-        Public Value As Object
+        Public Values() As Object
         Private Action As [Delegate]
 
-        Protected Sub New(ByVal description As String, ByVal value As Object, ByVal action As [Delegate])
+        Protected Sub New(ByVal description As String, ByVal values() As Object, ByVal action As [Delegate])
             Me.Description = description
-            Me.Value = value
+            Me.Values = values
             Me.Action = action
         End Sub
 
+        Public ReadOnly Property CanInvoke() As Boolean
+            Get
+                Return Action IsNot Nothing
+            End Get
+        End Property
+
         Public Sub Invoke()
-            Dim p() As Object = {Value}
-            Action.DynamicInvoke(p)
+            Action.DynamicInvoke(Values)
         End Sub
     End Class
 
     Public Class Given_
         Inherits GivenWhenThenBase
-        Sub New(ByVal description As String, ByVal value As Object, ByVal theGiven As [Delegate])
-            MyBase.New(description, value, theGiven)
+        Sub New(ByVal description As String, ByVal values() As Object, ByVal theGiven As [Delegate])
+            MyBase.New(description, values, theGiven)
         End Sub
     End Class
     Public Class Event_
         Inherits GivenWhenThenBase
-        Sub New(ByVal description As String, ByVal value As Object, ByVal [event] As [Delegate])
-            MyBase.New(description, value, [event])
+        Sub New(ByVal description As String, ByVal values() As Object, ByVal [event] As [Delegate])
+            MyBase.New(description, values, [event])
         End Sub
     End Class
     Public Class Outcome_
         Inherits GivenWhenThenBase
-        Sub New(ByVal description As String, ByVal value As Object, ByVal validator As [Delegate])
-            MyBase.New(description, value, validator)
+        Sub New(ByVal description As String, ByVal values() As Object, ByVal validator As [Delegate])
+            MyBase.New(description, values, validator)
         End Sub
     End Class
 
     Public Class Scenario_
-        Public Description As String = "Not specified"
+        Implements IScenarioBase
+
+        Private _title As String = "Not specified"
         Public Givens As IList(Of Given_) = New List(Of Given_)
         Public [Event] As Event_
         Public Outcomes As IList(Of Outcome_) = New List(Of Outcome_)
+
+
+        Public Sub New(ByVal title As String)
+            _title = title
+        End Sub
 
         Public Function Run() As Outcome
             Given() : [When]() : [Then]()
@@ -114,11 +87,16 @@ Public Class Behaviour 'should probably be named Story
         End Sub
 
 
+        Public ReadOnly Property Description() As String Implements Scenario.IScenarioBase.Title
+            Get
+                Return _title
+            End Get
+        End Property
     End Class
 
 
 
-    Public Overridable Sub Setup()
+    Protected Overridable Sub Setup()
     End Sub
 
 
@@ -126,6 +104,11 @@ Public Class Behaviour 'should probably be named Story
 
     Private _narrative As Narrative = New Narrative()
     Private _storyTitle As String = String.Empty
+
+    Private outcome As New Outcome(OutcomeResult.Failed, "Not verified")
+
+    Private ensurer As New Ensure(Of Behaviour)(outcome)    'So we can "catch" the result
+
 
     Public Event ScenarioOutcome(ByVal sender As Object, ByVal e As NBehaveEventArgs) Implements IStoryBase.ScenarioOutcome
 
@@ -137,29 +120,122 @@ Public Class Behaviour 'should probably be named Story
     End Property
 
 
-
-    Private Sub Story1() Implements Story.IStoryBase.Story
-        Throw New NotImplementedException
-    End Sub
-
-    'Runs the 
-    Private Function Run() As Outcome Implements IStoryBase.Run
-        Throw New NotImplementedException
-    End Function
-
-    Dim outcome As New Outcome(False, "Not verified")
-    Private ensurer As New Ensure(Of Behaviour)(outcome)
-
-    Protected Function Ensure() As Ensure(Of Behaviour)
-        Return ensurer
-    End Function
-
-
-    Public ReadOnly Property StoryTitle() As String
+    Protected ReadOnly Property StoryTitle() As String Implements IStoryBase.Title
         Get
             Return _storyTitle
         End Get
     End Property
+
+
+    Protected Overridable Sub Story1() Implements Story.IStoryBase.Story
+        Throw New NotImplementedException
+    End Sub
+
+
+    'Runs it all
+    Protected Function Run() As Outcome Implements IStoryBase.Run
+        Dim scenarioOutcomes As New List(Of Outcome)
+
+        For Each scenario As Scenario_ In _scenarios
+            Dim scenarioOutcome As Outcome
+
+            'scenarioOutcomes = New List(Of Outcome)
+            scenarioOutcome = ExecuteScenario(scenario)
+            If scenarioOutcome.Result = OutcomeResult.Passed Then
+                If Not AllItemsHaveAction(scenario) Then
+                    scenarioOutcome.Result = OutcomeResult.Pending
+                    scenarioOutcome.Message = "Something is missing an action"
+                End If
+            End If
+            scenarioOutcomes.Add(scenarioOutcome)
+        Next
+        Dim storyOutcome As Outcome = CreateOutcome(scenarioOutcomes)
+
+        Return storyOutcome
+
+    End Function
+
+    Private Function AllItemsHaveAction(ByVal scenario As Scenario_) As Boolean
+        Dim missingAction As Boolean = False
+
+        For Each g As Given_ In scenario.Givens
+            If Not g.CanInvoke Then
+                missingAction = True
+                Exit For
+            End If
+        Next
+        If Not scenario.Event.CanInvoke Then missingAction = True
+
+        If Not missingAction Then
+            For Each o As Outcome_ In scenario.Outcomes
+                If o.CanInvoke Then
+                    missingAction = True
+                    Exit For
+                End If
+            Next
+        End If
+
+        Return Not missingAction
+
+    End Function
+
+
+    Private Function ExecuteScenario(ByVal scenario As Scenario_) As Outcome
+        Dim thenOutcomes As List(Of Outcome)
+
+        InvokeGivens(scenario)
+        InvokeEvent(scenario)
+        thenOutcomes = InvokeOutcomes(scenario)
+
+        Dim scenarioOutcome As Outcome = CreateOutcome(thenOutcomes)
+        RaiseEvent ScenarioOutcome(scenario, New NBehaveEventArgs(scenarioOutcome))
+
+        Return scenarioOutcome
+
+    End Function
+
+
+    Private Function InvokeOutcomes(ByRef scenario As Scenario_) As List(Of Outcome)
+        Dim thenOutcomes As New List(Of Outcome)
+
+        For Each o As Outcome_ In scenario.Outcomes
+            If o.CanInvoke Then
+                o.Invoke()
+                thenOutcomes.Add(outcome)
+            Else
+                thenOutcomes.Add(New Outcome(OutcomeResult.Pending, "The outcome has no action"))
+            End If
+        Next
+
+        Return thenOutcomes
+
+    End Function
+
+
+    Private Sub InvokeEvent(ByRef scenario As Scenario_)
+        If scenario.Event.CanInvoke Then scenario.Event.Invoke()
+    End Sub
+
+
+    Private Sub InvokeGivens(ByRef scenario As Scenario_)
+        For Each g As Given_ In scenario.Givens
+            If g.CanInvoke Then g.Invoke()
+        Next
+    End Sub
+
+
+    Private Function CreateOutcome(ByVal outcomes As IList(Of Outcome)) As Outcome
+        Dim arr(outcomes.Count - 1) As Outcome
+        outcomes.CopyTo(arr, 0)
+        Dim finalOutcome As New Outcome(arr)
+
+        Return finalOutcome
+
+    End Function
+
+    Protected Overridable Function Ensure() As Ensure(Of Behaviour)
+        Return ensurer
+    End Function
 
     Protected Function Story() As Story.INarrativeAsA
         'The try/finally block prevents inling. Need to do that so I always get the same behaviour (Debugging never inlines methods).
@@ -174,7 +250,11 @@ Public Class Behaviour 'should probably be named Story
         'new story, clear out old scenarios
         _scenarios.Clear()
         Me._storyTitle = title
-        Return Me
+
+        Dim _fluentStory As New FluentStory(_narrative)   'As a x, I want y, So that z
+
+        Return _fluentStory
+
     End Function
 
 #End Region
@@ -184,21 +264,26 @@ Public Class Behaviour 'should probably be named Story
 
     Private _scenarios As IList(Of Scenario_) = New List(Of Scenario_)
 
+
     Public ReadOnly Property Scenarios() As ReadOnlyCollection(Of Scenario_)
         Get
             Return New ReadOnlyCollection(Of Scenario_)(_scenarios)
         End Get
     End Property
 
-    'The scenario being setup by Given/When/Then
-    Private _scenario As Scenario_
 
-
-    Protected Function Scenario(ByVal name As String) As IScenarioGiven
-        _scenario = New Scenario_
-        _scenario.Description = name
+    ''' <summary>
+    ''' This is the starting point for describing a scenario with its Given, When and Then's
+    ''' </summary>
+    ''' <param name="title"></param>
+    ''' <returns>an instance of IScenarioGiven</returns>
+    ''' <remarks></remarks>
+    Protected Function Scenario(ByVal title As String) As IScenarioGiven
+        Dim _scenario As New Scenario_(title)
         _scenarios.Add(_scenario)
-        Return Me
+
+        Return New FluentScenario(_scenario)
+
     End Function
 
 
@@ -206,42 +291,6 @@ Public Class Behaviour 'should probably be named Story
 #End Region
 
 
-#Region "Interface implementations"
-
-    'These 4 methods should be in their own class
-
-    Private Function AsA(ByVal role As String) As INarrativeIWant Implements Story.INarrativeAsA.AsA
-        Return _narrative.AsA(role)
-    End Function
-
-    Private Function Given(Of T)(ByVal description As String, ByVal value As T) As IScenarioGivenAnd Implements IScenarioGiven.Given, IScenarioGivenAnd.And
-        Return Given(description, value, Nothing)
-    End Function
-
-    Private Function Given(Of T)(ByVal description As String, ByVal value As T, ByVal theGiven As Action(Of T)) As IScenarioGivenAnd Implements IScenarioGiven.Given, IScenarioGivenAnd.And
-        _scenario.Givens.Add(New Given_(description, value, theGiven))
-        Return Me
-    End Function
-
-    Private Function [When](Of T)(ByVal description As String, ByVal value As T) As IScenarioWhen Implements IScenarioGivenAnd.When
-        Return [When](description, value, Nothing)
-    End Function
-
-    Private Function [When](Of T)(ByVal description As String, ByVal value As T, ByVal [event] As Action(Of T)) As IScenarioWhen Implements IScenarioGivenAnd.When
-        _scenario.Event = New Event_(description, value, [event])
-        Return Me
-    End Function
-
-    Private Function [Then](Of T)(ByVal description As String, ByVal expected As T) As IScenarioThen Implements IScenarioWhen.Then, IScenarioThen.And
-        Return [Then](description, expected, Nothing)
-    End Function
-
-    Private Function [Then](Of T)(ByVal description As String, ByVal expected As T, ByVal validator As Action(Of T)) As IScenarioThen Implements IScenarioWhen.Then, IScenarioThen.And
-        _scenario.Outcomes.Add(New Outcome_(description, expected, validator))
-        Return Me
-    End Function
-
-#End Region
 
 
 End Class

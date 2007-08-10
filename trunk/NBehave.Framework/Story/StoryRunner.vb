@@ -23,7 +23,6 @@ Namespace Story
         Public MustOverride Sub Run()
 
 
-
         Private _stories As IList = New ArrayList
         Protected ReadOnly StoryType As Type = GetType(Story(Of ))
 
@@ -56,7 +55,7 @@ Namespace Story
 
 
 
-        Protected Overridable Property Stories() As IList
+        Public Overridable Property Stories() As IList
             Get
                 Return _stories
             End Get
@@ -64,6 +63,7 @@ Namespace Story
                 _stories = value
             End Set
         End Property
+
 
         Public Sub AddStory(Of T)(ByVal story As T)
             AddStory(story, True)
@@ -99,9 +99,6 @@ Namespace Story
         Inherits StoryRunnerBase
 
 
-
-
-
         Private scenarioOutcomes As ReadOnlyCollection(Of Outcome)
 
 
@@ -135,7 +132,6 @@ Namespace Story
                 End If
             Next
         End Sub
-
 
 
         Public Overrides Sub Run()
@@ -179,13 +175,11 @@ Namespace Story
         End Sub
 
 
-
-
         Public Function GetStoryOutcome() As Outcome
             Dim storyOutcome As Outcome = Nothing
 
             If scenarioOutcomes Is Nothing OrElse scenarioOutcomes.Count = 0 Then
-                storyOutcome = New Outcome(False, "No outcomes")
+                storyOutcome = New Outcome(OutcomeResult.Failed, "No outcomes")
             Else
                 Dim outcomes(scenarioOutcomes.Count - 1) As Outcome
 

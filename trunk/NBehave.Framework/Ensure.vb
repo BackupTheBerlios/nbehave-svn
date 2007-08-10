@@ -37,7 +37,11 @@ Public Class EnsureBase(Of T)
 
     Private Sub Expected(ByVal expected As Boolean, ByVal compareTo As Boolean)
         _outcome.Message = String.Format(CurrentThread.CurrentUICulture, "Expected {0}, but is {1}", compareTo.ToString, expected.ToString)
-        _outcome.Passed = (expected = compareTo)
+        If expected = compareTo Then
+            _outcome.Result = OutcomeResult.Passed
+        Else
+            _outcome.Result = OutcomeResult.Failed
+        End If
     End Sub
 
 End Class
@@ -57,7 +61,7 @@ Public Class Ensure(Of T)
     End Sub
 
     Public Sub Failure()
-        Failure(New Outcome(False, "Failure"))
+        Failure(New Outcome(OutcomeResult.Failed, "Failure"))
     End Sub
 
     Public Sub Failure(ByVal theFailure As Outcome)

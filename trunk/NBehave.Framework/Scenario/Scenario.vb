@@ -2,6 +2,8 @@ Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.Collections.Generic
+Imports NBehave.Framework.Utility
+
 
 Namespace Scenario
 
@@ -20,6 +22,7 @@ Namespace Scenario
         Implements FluentInterface.IEvent(Of T)
         Implements FluentInterface.IOutcome(Of T)
         Implements IScenario(Of T)
+
 
 
         Public MustOverride Sub Specify() Implements IScenario(Of T).Specify
@@ -65,7 +68,6 @@ Namespace Scenario
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         ' Running the scenario
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
         Public Function Run() As Outcome Implements IScenario(Of T).Run
             '_outcomes.Clear()
 
@@ -92,7 +94,7 @@ Namespace Scenario
 
 
         Public Function VerifyOutcomes() As Outcome
-            Dim outcomeResult As New Outcome(True, "")
+            Dim outcomeResult As New Outcome(Framework.OutcomeResult.Passed, "")
             For Each o As World.IWorldOutcome(Of T) In _outcomes
                 o.Verify(Me.World)
                 outcomeResult.AddOutcome(o.Result)
@@ -101,6 +103,14 @@ Namespace Scenario
             Return outcomeResult
 
         End Function
+
+
+        Private ReadOnly Property Description() As String Implements IScenarioBase.Title
+            Get
+                Return CamelCaseToNormalSentence(Me.GetType.Name)
+            End Get
+        End Property
+
 
 
 
@@ -131,6 +141,7 @@ Namespace Scenario
         Public Function Given1(ByVal nameOfGiven As String, ByVal valueOfGiven As T, ByVal theGiven As IScenario(Of T).AGiven(Of T)) As FluentInterface.IGiven(Of T) Implements IScenario(Of T).Given
             Throw New NotImplementedException
         End Function
+
 
 
     End Class

@@ -10,7 +10,7 @@ Namespace World
         Implements IWorldOutcome(Of T)
 
 
-        Private _result As Outcome = New Outcome(False, "World not Verified")    ' Set a default result
+        Private _result As Outcome = New Outcome(OutcomeResult.Failed, "World not Verified")    ' Set a default result
         Private _ensurer As Ensure(Of T) = New Ensure(Of T)(Me)
 
         Protected MustOverride Sub Verify(ByVal world As T) Implements IWorldOutcome(Of T).Verify

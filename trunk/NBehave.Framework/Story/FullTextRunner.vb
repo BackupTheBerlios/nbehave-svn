@@ -22,8 +22,8 @@ Namespace Story
         End Sub
 
         Protected Overrides Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
-            WriteStoryName(e.Story)
-            If PrintNarrative Then WriteStoryNarrative(e.Story)
+            WriteStoryDescription(CType(e.Story, IStoryBase))
+            If PrintNarrative Then WriteStoryNarrative(CType(e.Story, IStoryBase))
             MyBase.StreamRunnerBeforeStoryRun(sender, e)
         End Sub
 
@@ -36,9 +36,21 @@ Namespace Story
         End Sub
 
 
+        Private Sub WriteStoryDescription(ByVal story As IStoryBase)
+            OutStream.WriteLine("Story: " & story.Title)
+        End Sub
+
+        Private Sub WriteStoryNarrative(ByVal story As IStoryBase)
+            Dim narrative As String = story.Narrative.ToString
+            narrative = "   " & narrative.Replace(Environment.NewLine, "." & Environment.NewLine & "   ") & "."
+            OutStream.Write(narrative)
+        End Sub
+
+
         Protected Overrides Sub WriteResultAfterStoryRun(ByVal outcome As Outcome)
-            OutStream.Write("Story outcome")
+            OutStream.Write("Story ")
             WriteOutcome(outcome)
+            OutStream.WriteLine()
             OutStream.Flush()
         End Sub
 

@@ -2,9 +2,7 @@ Option Strict On
 Option Explicit On
 
 Imports NBehave.Framework
-Imports NBehave.Framework.World
 Imports Examples.VB.ATM.Domain
-Imports NBehave.Framework.Story
 
 
 '<Behaviour()> _
@@ -18,16 +16,27 @@ Public Class UserWithdrawsCash
             IWant("to transfer money from my savings account"). _
             SoThat("I can get cash easily from an ATM")
 
+        'Scenario("sds").Given("ldlfk", {1, 2, 3}, AddressOf SetAccountBalance)
+
         Scenario("Transfer money"). _
-            Given("my savings account balance is", 42, AddressOf SetAccountBalance). _
-            And("my cash account balance is", 42, AddressOf SetCashAccountBalance). _
-            When("I transfer to cash account", 42). _
-            Then("my savings account balance should be", 0). _
-            And("my cash account balance should be", 84)
+            Given("my savings account balance is", 100, AddressOf SetAccountBalance). _
+            And("my cash account balance is", 200, AddressOf SetCashAccountBalance). _
+            When("I transfer to cash account", 20, AddressOf TransferMoney). _
+            Then("my savings account balance should be", 80, AddressOf VerifyAccountBalance). _
+            And("my cash account balance should be", 220, AddressOf VerifyCashAccountBalance)
+
+
+        Scenario("Transfer alot of money"). _
+           Given("my savings account balance is", 1000, AddressOf SetAccountBalance). _
+           And("my cash account balance is", 2000, AddressOf SetCashAccountBalance). _
+           When("I transfer to cash account", 200, AddressOf TransferMoney). _
+           Then("my savings account balance should be", 800, AddressOf VerifyAccountBalance). _
+           And("my cash account balance should be", 2200, AddressOf VerifyCashAccountBalance)
 
     End Sub
 
 
+    'TODO: Add test that makes this outcome Pending
     Public Sub TransferToAnotherCashAccount()
         Story.AsA("Bank card holder").IWant("to transfer money from my savings account").SoThat("I can get cash easily from an ATM")
 

@@ -23,17 +23,20 @@ Namespace Story
         Private failedStories As New List(Of Outcome)
         Private _outStream As IO.StreamWriter
 
-        Protected WithEvents storyRunner As StoryRunner
+        Private WithEvents storyRunner As StoryRunner
+        Private WithEvents behaviourRunner As BehaviourRunner
 
 
         Public Sub New(ByVal outStream As IO.Stream, ByVal assemblyToParseForStories As Reflection.Assembly)
             Me._outStream = New IO.StreamWriter(outStream)
             storyRunner = New StoryRunner(assemblyToParseForStories)
+            behaviourRunner = New BehaviourRunner(assemblyToParseForStories)
         End Sub
 
 
         Public Overrides Sub Run()
-            storyRunner.Run()
+            If storyRunner.Stories.Count > 0 Then storyRunner.Run()
+            behaviourRunner.Run()
         End Sub
 
         Protected ReadOnly Property Summary() As String
@@ -70,53 +73,72 @@ Namespace Story
         End Property
 
 
-        Protected Overridable Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunStart
+        Protected Overridable Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunStart, behaviourRunner.RunStart
         End Sub
 
 
-        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.ExecutingStory
+        Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunFinished, behaviourRunner.RunFinished
+            OutStream.WriteLine()
+            WriteSummary()
+            WriteFinalOutcome()
+            If FailCount > 0 Then WriteFailures()
+            OutStream.Flush()
+        End Sub
+
+
+        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.ExecutingStory, behaviourRunner.ExecutingStory
             StoryCount += 1
         End Sub
 
-        Protected Overridable Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.ScenarioExecuted
-            OutStream.Write("   " & CamelCaseToNormalSentence(sender.GetType.Name))
-            WriteOutcome(e.Outcome)
-            OutStream.WriteLine()
-        End Sub
 
-
-        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.StoryExecuted
+        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.StoryExecuted, behaviourRunner.StoryExecuted
             WriteResultAfterStoryRun(e.Outcome)
-            If Not e.Outcome.Passed Then
+            If e.Outcome.Result = OutcomeResult.Failed Then
                 failedStories.Add(e.Outcome)
                 FailCount += 1
             End If
         End Sub
 
-        Protected Sub WriteOutcome(ByVal outcome As Outcome)
-            If Outcome.Passed Then
-                OutStream.Write(" --> Passed")
+
+        Protected Overridable Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.ScenarioExecuted, behaviourRunner.ScenarioExecuted
+            OutStream.Write("   " & GetDescription(sender))
+            WriteOutcome(e.Outcome)
+            OutStream.WriteLine()
+        End Sub
+
+
+        Private Function GetDescription(ByVal sender As Object) As String
+            Dim description As String = String.Empty
+
+            If GetType(IScenarioBase).IsAssignableFrom(sender.GetType) Then
+                description = CType(sender, IScenarioBase).Title
             Else
-                OutStream.Write(String.Format("  --> Failed - {0}", Outcome.Message))
+                description = CamelCaseToNormalSentence(sender.GetType.Name)
             End If
+            Return description
+        End Function
+
+
+
+        Protected Sub WriteOutcome(ByVal outcome As Outcome)
+            Select Case outcome.Result
+                Case OutcomeResult.Passed : OutStream.Write(" --> Passed")
+                Case OutcomeResult.Failed : OutStream.Write(String.Format("  --> Failed - {0}", outcome.Message))
+                Case OutcomeResult.Pending : OutStream.Write("  --> Pending")
+                Case Else
+                    Throw New NotImplementedException(String.Format("outcome {0} isn't implemented", outcome.ToString))
+            End Select
         End Sub
 
 
         Protected Overridable Sub WriteResultAfterStoryRun(ByVal outcome As Outcome)
-            If outcome.Passed Then
-                OutStream.Write(".")
-            Else
-                OutStream.Write("x")
-            End If
-            OutStream.Flush()
-        End Sub
-
-
-        Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunFinished
-            OutStream.WriteLine()
-            WriteSummary()
-            WriteFinalOutcome()
-            If FailCount > 0 Then WriteFailures()
+            Select Case outcome.Result
+                Case OutcomeResult.Passed : OutStream.Write(".")
+                Case OutcomeResult.Failed : OutStream.Write("x")
+                Case OutcomeResult.Pending : OutStream.Write("p")
+                Case Else
+                    Throw New NotImplementedException(String.Format("outcome {0} isn't implemented", outcome.ToString))
+            End Select
             OutStream.Flush()
         End Sub
 

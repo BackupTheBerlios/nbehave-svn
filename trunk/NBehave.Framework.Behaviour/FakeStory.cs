@@ -70,7 +70,7 @@ namespace NBehave.Framework.BehaviourNUnit
 
         private Outcome CreateSuccessfulOutcome()
         {
-            Outcome o = new Outcome(true, "cool");
+            Outcome o = new Outcome(OutcomeResult.Passed, "cool");
             Outcome[] oArr = new Outcome[1];
             oArr[0] = o;
             o.AddOutcomes(oArr);

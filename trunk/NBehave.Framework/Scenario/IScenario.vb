@@ -5,8 +5,13 @@ Imports System.Collections.ObjectModel
 
 Namespace Scenario
 
+    Public Interface IScenarioBase
+        ReadOnly Property Title() As String
+    End Interface
 
     Public Interface IScenario(Of T)
+        Inherits IScenarioBase
+
         Delegate Function AGiven(Of G)(ByVal params() As Object) As G
 
         Function Given(ByVal theGiven As World.IGiven(Of T)) As FluentInterface.IGiven(Of T)
