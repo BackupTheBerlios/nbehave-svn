@@ -13,7 +13,9 @@
 		<delete>
 			<fileset>
 				<include name="*.zip"/>
-				<include name="${wixFile}.wixobj"/>
+				<include name="${wixFile}.wixobj"/>			
+				<include name="NBehave.MSI" />
+				<include name="NBehave.wxs" />					
 			</fileset>
 		</delete>
 	</target>

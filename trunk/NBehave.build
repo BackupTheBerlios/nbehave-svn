@@ -18,7 +18,7 @@
 	<target name="test" depends="compile">
 		<exec program="C:\Program Files\NUnit-Net-2.0 2.2.8\bin\nunit-console.exe" workingdir="${sourceDir}">
 			<arg value="${sourceDir}\NBehave.Framework.Behaviour\bin\${solution.target}\NBehave.Framework.Behaviour.dll" />
-			<arg value="/xml=${sourceDir}\nunitTestResult.xml" />
+			<arg value="/xml=${artifactsDir}\nunitTestResult.xml" />
 		</exec>
 	</target>
 	<!-- -->
@@ -79,16 +79,8 @@
 		</if>
 	</target>		
 	<!-- -->
-	<target name="setup" depends="cleanTestResults, cleanSource">
+	<target name="setup" depends="cleanSource">
 		<mkdir  dir="${artifactsDir}" if="${not directory::exists('artifactsDir')}" />
-	</target>
-	<!-- -->
-	<target name="cleanTestResults">
-		<delete>
-			<fileset>
-				<include name="${artifactsDir}\**.xml"/>
-			</fileset>
-		</delete>
 	</target>
 	<!-- -->
 	<target name="cleanSource">
