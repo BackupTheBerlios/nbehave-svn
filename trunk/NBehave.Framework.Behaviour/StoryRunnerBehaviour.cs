@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
@@ -47,8 +48,7 @@ namespace NBehave.Framework.BehaviourNUnit
             // Since I'm lazy, I will use Examlpes.CS
 
             //Given
-            System.IO.FileInfo f = new System.IO.FileInfo(this.GetType().Assembly.Location);
-            System.Reflection.Assembly asm = System.Reflection.Assembly.LoadFile( f.DirectoryName  +  "\\Examples.CS.exe");
+            System.Reflection.Assembly asm = this.GetType().Assembly; 
 
             StoryRunner storyRunner = new StoryRunner(asm);
             bool storyCalled = false;
@@ -63,27 +63,6 @@ namespace NBehave.Framework.BehaviourNUnit
             
         }
 
-
-        [Test,Ignore("Test has incorrectly setup")]
-        public void ShouldFailIfScenarioHasZeroOutcomes()
-        {
-            //Given
-            //Mockery mocks = new Mockery();
-
-            //IStory<SimplestPossibleWorld> story = new FakeStory(); // (IStory<SimplestPossibleWorld>)mocks.NewMock<IStory<SimplestPossibleWorld>>();
-
-            //System.Collections.ArrayList stories = new System.Collections.ArrayList();
-            //stories.Add(story);
-
-            //StoryRunner storyRunner = new StoryRunner(stories);
-            StoryRunner storyRunner = new StoryRunner(System.Reflection.Assembly.GetAssembly(this.GetType()));
-
-            //When
-            storyRunner.Run();
-
-            //Then
-            Assert.AreEqual(OutcomeResult.Failed, storyRunner.GetStoryOutcome().Result);
-        }
 
 
         [Test, ExpectedException(typeof(ArgumentException), "assemblyToParseForStories is NULL")]
@@ -102,7 +81,7 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             //System.Collections.IList lst=new System.Collections.ArrayList();
-            StoryRunner storyRunner = new StoryRunner(System.Reflection.Assembly.GetAssembly(this.GetType()));
+            StoryRunner storyRunner = new StoryRunner(Assembly.GetAssembly(this.GetType()));
 
             string story = "Ths is not a story";
             //When

@@ -16,16 +16,15 @@
 	</target>
 	<!-- -->
 	<target name="test" depends="compile">
-		<nunit2>
-			<formatter type="Xml" usefile="false"/>
-			<!-- extension=".xml" outputdir="${artifactsDir}" -->
-			<test assemblyname="${sourceDir}\NBehave.Framework.Behaviour\bin\${solution.target}\NBehave.Framework.Behaviour.dll"/>
-		</nunit2>
+		<exec program="C:\Program Files\NUnit-Net-2.0 2.2.8\bin\nunit-console.exe" workingdir="${sourceDir}">
+			<arg value="${sourceDir}\NBehave.Framework.Behaviour\bin\${solution.target}\NBehave.Framework.Behaviour.dll" />
+			<arg value="/xmlConsole" />
+		</exec>
 	</target>
 	<!-- -->
 	<target name="compile" depends="setup, setVersion">
 		<exec program="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild.exe">
-			<arg line="/v:q /nologo /t:Clean /logger:Rodemeyer.MsBuildToCCNet.MsBuildToCCNetLogger,${sourceDir}\Lib\Rodemeyer.MsBuildToCCnet.dll;${artifactsDir}\msbuild.log ${sourceDir}\NBehave.sln"/>
+			<arg line="/v:q /nologo /t:Rebuild /logger:Rodemeyer.MsBuildToCCNet.MsBuildToCCNetLogger,${sourceDir}\Lib\Rodemeyer.MsBuildToCCnet.dll;${artifactsDir}\msbuild.log ${sourceDir}\NBehave.sln"/>
 		</exec>
 	</target>
 	<!-- -->
