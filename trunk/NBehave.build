@@ -18,7 +18,7 @@
 	<target name="test" depends="compile">
 		<exec program="C:\Program Files\NUnit-Net-2.0 2.2.8\bin\nunit-console.exe" workingdir="${sourceDir}">
 			<arg value="${sourceDir}\NBehave.Framework.Behaviour\bin\${solution.target}\NBehave.Framework.Behaviour.dll" />
-			<arg value="/xml=${artifactsDir}\nunitTestResult\NBehaveTests_${version}.xml" />
+			<arg value="/xml=${artifactsDir}\nunitTestResult.xml" />
 		</exec>
 	</target>
 	<!-- -->
