@@ -5,7 +5,6 @@
 	<property name="Wix.Dir" value="C:\Program Files\Windows Installer XML\bin"/>
 	<!--WiX: http://wix.sourceforge.net/ -->
 	<property name="wixFile" value="NBehave"/>
-	<property name="version" value="0.1.0"/>
 	<!--		-->
 	<property name="projectName" value="NBehave"/>
 	<property name="shortName" value="NB"/>
@@ -68,12 +67,6 @@
 			</filterchain>
 		</copy>
 	</target>
-	<!-- -->
-	<target name="version">
-		<if test="${property::exists('CCNetLabel')}">
-			<property name="version" value="${CCNetLabel}"/>
-		</if>
-	</target>	
 	<!-- -->
 	<target name="fileTemplate">
 		<!-- -->

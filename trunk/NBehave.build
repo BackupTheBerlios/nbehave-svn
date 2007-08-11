@@ -6,7 +6,7 @@
 	<property name="artifactsDir" value="${directory::get-current-directory()}\Artifacts"/>
 	<property name="configuration" value=""/>
 	<property name="solution.target" value="Debug"/>
-	<echo message="srcDir: ${sourceDir}"/>
+	<property name="version" value="0.1.0"/>
 	<!-- -->
 	<target name="build" depends="msi">		
 	</target>
@@ -18,7 +18,7 @@
 	<target name="test" depends="compile">
 		<exec program="C:\Program Files\NUnit-Net-2.0 2.2.8\bin\nunit-console.exe" workingdir="${sourceDir}">
 			<arg value="${sourceDir}\NBehave.Framework.Behaviour\bin\${solution.target}\NBehave.Framework.Behaviour.dll" />
-			<arg value="/xmlConsole" />
+			<arg value="/xml=${artifactsDir}\nunitTestResult\NBehaveTests_${version}.xml" />
 		</exec>
 	</target>
 	<!-- -->
@@ -27,8 +27,9 @@
 			<arg line="/v:q /nologo /t:Rebuild /logger:Rodemeyer.MsBuildToCCNet.MsBuildToCCNetLogger,${sourceDir}\Lib\Rodemeyer.MsBuildToCCnet.dll;${artifactsDir}\msbuild.log ${sourceDir}\NBehave.sln"/>
 		</exec>
 	</target>
+	
 	<!-- -->
-	<target name="setVersion">
+	<target name="setVersion" depends="version">
 		<foreach item="File" property="filename">
 			<in>
 				<items>
@@ -44,7 +45,7 @@
 					</imports>
 					<code><![CDATA[
 						Public Shared Sub ScriptMain(ByVal project as Project)
-							Dim ver as String = project.Properties("CCNetLabel")
+							Dim ver as String = project.Properties("version")
 							if ver is nothing orelse ver.trim.length=0 then ver="0.1.0"
 							Dim version As New Version(ver)
 							Dim fileName As String = project.Properties("filename")
@@ -71,6 +72,12 @@
 			</do>
 		</foreach>
 	</target>
+	<!-- -->
+	<target name="version">
+		<if test="${property::exists('CCNetLabel')}">
+			<property name="version" value="${CCNetLabel}"/>
+		</if>
+	</target>		
 	<!-- -->
 	<target name="setup" depends="cleanTestResults, cleanSource">
 		<mkdir  dir="${artifactsDir}" if="${not directory::exists('artifactsDir')}" />
