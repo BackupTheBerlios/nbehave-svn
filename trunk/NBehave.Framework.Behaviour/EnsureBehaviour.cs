@@ -15,9 +15,9 @@ namespace NBehave.Framework.BehaviourNUnit
     public class EnsureBehaviour
     {
 
-        private class SimpleWorldOutcome<T>: WorldOutcome<T>
+        private class SimpleWorldOutcome: WorldOutcome
         {
-            protected override void Verify(T world)
+            protected override void Verify<T>(T world)
             {
             }
         }
@@ -26,8 +26,8 @@ namespace NBehave.Framework.BehaviourNUnit
         public void ShouldEnsureFailure()
         {
             //given
-            WorldOutcome<SimplestPossibleWorld> outcome = new SimpleWorldOutcome<SimplestPossibleWorld>();
-            Ensure<SimplestPossibleWorld> ensure = new Ensure<SimplestPossibleWorld>(outcome);
+            IWorldOutcome outcome = new SimpleWorldOutcome();
+            Ensure ensure = new Ensure(outcome);
 
             //When
             ensure.Failure();
@@ -42,8 +42,8 @@ namespace NBehave.Framework.BehaviourNUnit
         public void ShouldEnsureThatItIsTruePasses()
         {
              //given
-            WorldOutcome<SimplestPossibleWorld> outcome = new SimpleWorldOutcome<SimplestPossibleWorld>();
-            Ensure<SimplestPossibleWorld> ensure = new Ensure<SimplestPossibleWorld>(outcome);
+            WorldOutcome outcome = new SimpleWorldOutcome();
+            Ensure ensure = new Ensure(outcome);
 
             //When
             ensure.IsTrue(true);
@@ -57,8 +57,8 @@ namespace NBehave.Framework.BehaviourNUnit
         public void ShouldEnsureThatItIsTrueFails()
         {
             //given
-            WorldOutcome<SimplestPossibleWorld> outcome = new SimpleWorldOutcome<SimplestPossibleWorld>();
-            Ensure<SimplestPossibleWorld> ensure = new Ensure<SimplestPossibleWorld>(outcome);
+            WorldOutcome outcome = new SimpleWorldOutcome();
+            Ensure ensure = new Ensure(outcome);
 
             //When
             ensure.IsTrue(false);
@@ -73,8 +73,8 @@ namespace NBehave.Framework.BehaviourNUnit
         public void ShouldEnsureThatItIsFalsePasses()
         {
             //given
-            WorldOutcome<SimplestPossibleWorld> outcome = new SimpleWorldOutcome<SimplestPossibleWorld>();
-            Ensure<SimplestPossibleWorld> ensure = new Ensure<SimplestPossibleWorld>(outcome);
+            WorldOutcome outcome = new SimpleWorldOutcome();
+            Ensure ensure = new Ensure(outcome);
 
             //When
             ensure.IsFalse(false);

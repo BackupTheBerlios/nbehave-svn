@@ -37,12 +37,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ATM\AccountBehaviour.cs" />
+    <Compile Include="ATM\Domain\Account.cs" />
     <Compile Include="ATM\Domain\IAccount.cs" />
-    <Compile Include="ATM\Events\UserRequestsCash.cs" />
-    <Compile Include="ATM\Givens\AccountIsInCredit.cs" />
-    <Compile Include="ATM\Outcomes\AccountBalanceShouldBeReduced.cs" />
-    <Compile Include="ATM\Scenarios\HappyScenario.cs" />
-    <Compile Include="ATM\Scenarios\HappyScenarioThatFails.cs" />
+    <Compile Include="ATM\Events\TransferToCashAccount.cs" />
+    <Compile Include="ATM\Givens\GivenAnAccount.cs" />
+    <Compile Include="ATM\Outcomes\VerifyAccountBalance.cs" />
     <Compile Include="ATM\Stories\UserWithdrawsCash.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,6 +52,9 @@
       <Project>{C82A9602-D065-464F-AB77-44DC5855E7E3}</Project>
       <Name>NBehave.Framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ATM\Scenarios\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,14 +5,14 @@ using NBehave.Framework.World;
 using Example.ATM.Domain;
 
 
-namespace Example.ATM.Events
+namespace Example.ATM.Events //Examples.CS.ATM.Events
 {
-    class UserRequestsCash:IEvent
+    class TransferToCashAccount : IEvent
     {
-        IAccount fromAccount;
+         IAccount fromAccount;
         IAccount toAccount;
         int amount;
-        public UserRequestsCash(IAccount fromAccount, IAccount toAccount, int amount)
+        public TransferToCashAccount(IAccount fromAccount, IAccount toAccount, int amount)
         {
             this.fromAccount = fromAccount;
             this.toAccount = toAccount;

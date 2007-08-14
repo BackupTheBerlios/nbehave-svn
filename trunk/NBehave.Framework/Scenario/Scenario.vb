@@ -7,40 +7,33 @@ Imports NBehave.Framework.Utility
 
 Namespace Scenario
 
-    Public Class WorldOutcomeCollection(Of T)
-        Inherits Collection(Of World.IWorldOutcome(Of T))
-    End Class
-
-    Public Class GivenCollection(Of T)
-        Inherits Collection(Of World.IGiven(Of T))
-    End Class
 
 
-
-    Public MustInherit Class Scenario(Of T As Class)
-        Implements FluentInterface.IGiven(Of T)
-        Implements FluentInterface.IEvent(Of T)
-        Implements FluentInterface.IOutcome(Of T)
-        Implements IScenario(Of T)
+    Public MustInherit Class Scenario
+        Implements FluentInterface.IGivenStart
+        Implements FluentInterface.IGiven
+        Implements FluentInterface.IEvent
+        Implements FluentInterface.IOutcome
+        Implements IScenario
 
 
 
-        Public MustOverride Sub Specify() Implements IScenario(Of T).Specify
-        Public MustOverride Function SetupWorld() As T Implements IScenario(Of T).SetupWorld
+        Public MustOverride Sub Specify() Implements IScenario.Specify
+        Public MustOverride Function SetupWorld() As Object Implements IScenario.SetupWorld
 
 
-        Private _givens As GivenCollection(Of T)
-        Private _event As World.[IEvent](Of T)
-        Private _outcomes As WorldOutcomeCollection(Of T)
-        Private _world As T
+        Private _givens As IList(Of World.IGiven)
+        Private _event As World.[IEvent]
+        Private _outcomes As IList(Of World.IWorldOutcome)
+        Private _world As Object
 
 
         Protected Sub New()
-            Me.New(New GivenCollection(Of T), Nothing, New WorldOutcomeCollection(Of T), Nothing)
+            Me.New(New List(Of World.IGiven), Nothing, New List(Of World.IWorldOutcome), Nothing)
         End Sub
 
 
-        Protected Sub New(ByVal givens As GivenCollection(Of T), ByVal [event] As World.[IEvent](Of T), ByVal outcomes As WorldOutcomeCollection(Of T), ByVal world As T)
+        Protected Sub New(ByVal givens As IList(Of World.IGiven), ByVal [event] As World.[IEvent], ByVal outcomes As IList(Of World.IWorldOutcome), ByVal world As Object)
             _givens = givens
             _event = [event]
             _outcomes = outcomes
@@ -48,17 +41,17 @@ Namespace Scenario
         End Sub
 
 
-        Protected Property World() As T Implements IScenario(Of T).World
+        Protected Property World() As Object Implements IScenario.World
             Get
                 Return _world
             End Get
-            Set(ByVal Value As T)
+            Set(ByVal Value As Object)
                 _world = Value
             End Set
         End Property
 
 
-        Public ReadOnly Property [Event]() As World.[IEvent](Of T)
+        Public ReadOnly Property [Event]() As World.IEvent
             Get
                 Return _event
             End Get
@@ -68,7 +61,7 @@ Namespace Scenario
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         ' Running the scenario
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-        Public Function Run() As Outcome Implements IScenario(Of T).Run
+        Public Function Run() As Outcome Implements IScenario.Run
             '_outcomes.Clear()
 
             Specify()
@@ -82,7 +75,7 @@ Namespace Scenario
 
 
         Public Sub SetupGivens()
-            For Each g As World.IGiven(Of T) In _givens
+            For Each g As World.IGiven In _givens
                 g.Setup(Me.World)
             Next
         End Sub
@@ -95,8 +88,12 @@ Namespace Scenario
 
         Public Function VerifyOutcomes() As Outcome
             Dim outcomeResult As New Outcome(Framework.OutcomeResult.Passed, "")
-            For Each o As World.IWorldOutcome(Of T) In _outcomes
-                o.Verify(Me.World)
+            For Each o As World.IWorldOutcome In _outcomes
+                Try
+                    o.Verify(Me.World)
+                Catch ex As Exception
+                    o.Result = New Outcome(Framework.OutcomeResult.Failed, ex.ToString)
+                End Try
                 outcomeResult.AddOutcome(o.Result)
             Next
 
@@ -105,7 +102,7 @@ Namespace Scenario
         End Function
 
 
-        Private ReadOnly Property Description() As String Implements IScenarioBase.Title
+        Protected Overridable ReadOnly Property Title() As String Implements IScenarioBase.Title
             Get
                 Return CamelCaseToNormalSentence(Me.GetType.Name)
             End Get
@@ -117,32 +114,25 @@ Namespace Scenario
 #Region "FluentInterface implementation"
 
 
-        Public Function Given(ByVal theGiven As World.IGiven(Of T)) As FluentInterface.IGiven(Of T) Implements IScenario(Of T).Given, FluentInterface.IGiven(Of T).And
+        Public Function Given(ByVal description As String, ByVal theGiven As World.IGiven) As FluentInterface.IGiven Implements FluentInterface.IGivenStart.Given, IScenario.Given, FluentInterface.IGiven.And
             _givens.Add(theGiven)
             Return Me
         End Function
 
 
 
-        Private Function [When](ByVal theEvent As World.[IEvent](Of T)) As FluentInterface.IEvent(Of T) Implements FluentInterface.IGiven(Of T).When
+        Private Function [When](ByVal description As String, ByVal theEvent As World.[IEvent]) As FluentInterface.IEvent Implements FluentInterface.IGiven.When
             _event = theEvent
             Return Me
         End Function
 
 
-        Private Function [Then](ByVal outcome As World.IWorldOutcome(Of T)) As FluentInterface.IOutcome(Of T) Implements FluentInterface.IEvent(Of T).Then, FluentInterface.IOutcome(Of T).And
+        Private Function [Then](ByVal description As String, ByVal outcome As World.IWorldOutcome) As FluentInterface.IOutcome Implements FluentInterface.IEvent.Then, FluentInterface.IOutcome.And
             _outcomes.Add(outcome)
             Return Me
         End Function
 
 #End Region
-
-
-        Public Function Given1(ByVal nameOfGiven As String, ByVal valueOfGiven As T, ByVal theGiven As IScenario(Of T).AGiven(Of T)) As FluentInterface.IGiven(Of T) Implements IScenario(Of T).Given
-            Throw New NotImplementedException
-        End Function
-
-
 
     End Class
 

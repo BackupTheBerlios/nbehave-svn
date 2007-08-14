@@ -105,9 +105,9 @@ Public Class Behaviour 'should probably be named Story
     Private _narrative As Narrative = New Narrative()
     Private _storyTitle As String = String.Empty
 
-    Private outcome As New Outcome(OutcomeResult.Failed, "Not verified")
+    'Private outcome As New Outcome(OutcomeResult.Failed, "Not verified")
 
-    Private ensurer As New Ensure(Of Behaviour)(outcome)    'So we can "catch" the result
+    Private ensurer As Ensure 'New Ensure(outcome)    'So we can "catch" the result
 
 
     Public Event ScenarioOutcome(ByVal sender As Object, ByVal e As NBehaveEventArgs) Implements IStoryBase.ScenarioOutcome
@@ -200,7 +200,13 @@ Public Class Behaviour 'should probably be named Story
 
         For Each o As Outcome_ In scenario.Outcomes
             If o.CanInvoke Then
-                o.Invoke()
+                Dim outcome As Outcome
+                Try
+                    o.Invoke()
+                    outcome = ensurer.Outcome
+                Catch ex As Exception
+                    outcome = New Outcome(OutcomeResult.Failed, ex.ToString)
+                End Try
                 thenOutcomes.Add(outcome)
             Else
                 thenOutcomes.Add(New Outcome(OutcomeResult.Pending, "The outcome has no action"))
@@ -233,7 +239,8 @@ Public Class Behaviour 'should probably be named Story
 
     End Function
 
-    Protected Overridable Function Ensure() As Ensure(Of Behaviour)
+    Protected Overridable Function Ensure() As Ensure
+        ensurer = New Ensure(New Outcome(OutcomeResult.Failed, String.Empty))
         Return ensurer
     End Function
 

@@ -12,7 +12,7 @@ Public Interface IIsSomething
 End Interface
 
 
-Public Class EnsureBase(Of T)
+Public Class EnsureBase
     Implements IIsSomething
 
     Private _outcome As Outcome
@@ -48,15 +48,15 @@ End Class
 
 
 
-Public Class Ensure(Of T)
-    Inherits EnsureBase(Of T)
+Public Class Ensure
+    Inherits EnsureBase
 
 
     Public Sub New(ByVal outcome As Outcome)
         Me.Outcome = outcome
     End Sub
 
-    Public Sub New(ByVal outcome As IWorldOutcome(Of T))
+    Public Sub New(ByVal outcome As IWorldOutcome)
         Me.Outcome = outcome.Result
     End Sub
 

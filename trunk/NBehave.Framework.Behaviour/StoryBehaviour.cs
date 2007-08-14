@@ -19,7 +19,7 @@ namespace NBehave.Framework.BehaviourNUnit
         public void StoryShouldHaveNarrative()
         {
             //Given 
-            Story<SimplestPossibleWorld> theStory = new FakeStory();
+            Story.Story  theStory = new FakeStory();
             const string user = "Developer";
             const string feature = "this to work";
             const string benefit = "I can move to the next feature";
@@ -38,8 +38,8 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             Mockery mocks = new Mockery();
-            IScenario<SimplestPossibleWorld> scenario = mocks.NewMock<IScenario<SimplestPossibleWorld>>();
-            IStory<SimplestPossibleWorld> story = new FakeStory();
+            IScenario scenario = mocks.NewMock<IScenario>();
+            IStory story = new FakeStory();
 
             //When
             story.AddScenario(scenario);
@@ -56,10 +56,10 @@ namespace NBehave.Framework.BehaviourNUnit
             //Given
             Mockery mocks = new Mockery();
             SimplestPossibleWorld world = new SimplestPossibleWorld();
-            IStory<SimplestPossibleWorld> story = new FakeStory();
+            IStory story = new FakeStory();
 
             //Story has scenarios
-            IScenario<SimplestPossibleWorld> scenario = mocks.NewMock<IScenario<SimplestPossibleWorld>>();
+            IScenario scenario = mocks.NewMock<IScenario>();
 
             story.AddScenario(scenario);
 

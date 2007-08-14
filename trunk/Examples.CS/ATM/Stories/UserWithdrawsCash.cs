@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using NBehave.Framework;
 using NBehave.Framework.World;
-using Example.ATM.Scenarios;
+using NBehave.Framework.Scenario;
 using NBehave.Framework.Story;
+
+using Example.ATM.Domain;
+using Example.ATM.Givens;
+using Example.ATM.Events;
+using Example.ATM.Outcomes;
 
 namespace Example.ATM.Stories
 {
-    public class UserWithdrawsCash:Story<Domain.IAccount>
+    //The name of the story is taken from the class name
+    public class UserWithdrawsCash:Story
     {
         public override void Story()
         {
@@ -19,9 +25,16 @@ namespace Example.ATM.Stories
 
         public override void Scenarios()
         {
-            AddScenario(new HappyScenario());
-            //AddScenario(new HappyScenarioThatFails()); 
-        }
+            IAccount account = new Account();        //TODO: Move Account Implementation out of that class
+            IAccount cashAccount = new Account();
 
+            Scenario("Transfer money").
+                Given("my cash account balance is", new GivenAnAccount(account, 50)).
+                And("my cash account balance is", new GivenAnAccount(cashAccount, 20)).
+                When("I transfer to cash account", new TransferToCashAccount(account, cashAccount, 20)).
+                Then("my savings account balance should be reduced", new VerifyAccountBalance(account,30)).
+                And("my cash account balance should be increased", new VerifyAccountBalance(cashAccount,40));
+            //AddScenario(scenario);
+        }
     }
 }

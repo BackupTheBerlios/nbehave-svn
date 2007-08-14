@@ -7,6 +7,6 @@ namespace Example.ATM.Domain
     public interface IAccount
     {
         int Balance { get; set;}
-        void Withdraw(int amount);
+        void Transfer(int amount, IAccount toAccount);
     }
 }

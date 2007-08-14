@@ -6,19 +6,19 @@ using Example.ATM.Domain;
 
 namespace Example.ATM.Givens
 {
-    public class AccountIsInCredit: IGiven   
+    public class GivenAnAccount : IGiven  
     {
         private IAccount account;
 
-        public AccountIsInCredit(IAccount account, int balance)
+        public GivenAnAccount(IAccount account, int balance)
         {
             this.account = account;
-            this.account.Balance = 50;
+            this.account.Balance = balance;
         }
 
         public void Setup<T>(T world)
         {
-            //Bad example huh? I did all the setup in the constructor...
+            //All setup was made in the constructor
         }
     }
 }

@@ -13,7 +13,7 @@ using NMock2;
 
 namespace NBehave.Framework.BehaviourNUnit
 {
-    public class FakeStory : Story<SimplestPossibleWorld>
+    public class FakeStory : Story.Story 
     {
         public bool didCallScenarios = false;
         public bool didCallRun = false;
@@ -28,7 +28,7 @@ namespace NBehave.Framework.BehaviourNUnit
         public override void Scenarios()
         {
             didCallScenarios = true;
-            IScenario<SimplestPossibleWorld> scenario = PrepareScenario();
+            IScenario scenario = PrepareScenario();
             AddScenario(scenario);
         }
 
@@ -39,7 +39,7 @@ namespace NBehave.Framework.BehaviourNUnit
             return base.Run();
         }
 
-        private IScenario<SimplestPossibleWorld> PrepareScenario()
+        private IScenario PrepareScenario()
         {
             Mockery mocks = new Mockery();
             SimplestPossibleWorld world = new SimplestPossibleWorld();
@@ -47,15 +47,15 @@ namespace NBehave.Framework.BehaviourNUnit
             SetupGiven(ref mocks, ref world);
             SetupEvent(ref mocks, ref world);
             SetupWorldOutcome(ref mocks, ref world);
-            IScenario<SimplestPossibleWorld> scenario = SetupScenario(ref mocks, ref world);
+            IScenario scenario = SetupScenario(ref mocks, ref world);
 
             return scenario;
         }
 
 
-        private IScenario<SimplestPossibleWorld> SetupScenario(ref Mockery mocks, ref SimplestPossibleWorld world)
+        private IScenario SetupScenario(ref Mockery mocks, ref SimplestPossibleWorld world)
         {
-            IScenario<SimplestPossibleWorld> scenario = mocks.NewMock<IScenario<SimplestPossibleWorld>>();
+            IScenario scenario = mocks.NewMock<IScenario>();
             Expect.AtLeast(1).On(scenario).Method("SetupWorld").Will(Return.Value(world));
             Expect.AtLeast(0).On(scenario).SetProperty("World").To(world);
             Expect.AtLeast(0).On(scenario).GetProperty("World").Will(Return.Value(world));
@@ -82,24 +82,24 @@ namespace NBehave.Framework.BehaviourNUnit
 
         private void SetupWorldOutcome(ref Mockery mocks, ref SimplestPossibleWorld world)
         {
-            IWorldOutcome<SimplestPossibleWorld> outcome = mocks.NewMock<IWorldOutcome<SimplestPossibleWorld>>();
+            IWorldOutcome outcome = mocks.NewMock<IWorldOutcome>();
             Expect.AtLeast(1).On(outcome).Method("Verify").With(world);
             Expect.AtLeast(1).On(outcome).GetProperty("Result").Will(Return.Value(CreateSuccessfulOutcome()));
-            WorldOutcomeCollection<SimplestPossibleWorld> outcomeCollection = new WorldOutcomeCollection<SimplestPossibleWorld>();
+            List<IWorldOutcome> outcomeCollection = new List<IWorldOutcome>();
             outcomeCollection.Add(outcome);
         }
 
         private void SetupEvent(ref Mockery mocks, ref SimplestPossibleWorld world)
         {
-            IEvent<SimplestPossibleWorld> evt = mocks.NewMock<IEvent<SimplestPossibleWorld>>();
+            IEvent evt = mocks.NewMock<IEvent>();
             Expect.AtLeast(1).On(evt).Method("OccurIn").With(world);
         }
 
         private void SetupGiven(ref Mockery mocks, ref SimplestPossibleWorld world)
         {
-            IGiven<SimplestPossibleWorld> given = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
+            IGiven given = (IGiven)mocks.NewMock<IGiven>();
             Expect.AtLeast(1).On(given).Method("Setup").With(world);
-            GivenCollection<SimplestPossibleWorld> GivenCollection = new GivenCollection<SimplestPossibleWorld>();
+            List<IGiven> GivenCollection = new List<IGiven>();
             GivenCollection.Add(given);
         }
 

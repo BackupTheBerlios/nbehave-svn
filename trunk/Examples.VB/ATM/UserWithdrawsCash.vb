@@ -5,18 +5,16 @@ Imports NBehave.Framework
 Imports Examples.VB.ATM.Domain
 
 
-'<Behaviour()> _
 Public Class UserWithdrawsCash
     Inherits Behaviour
 
 
     Public Sub TransferToCashAccount()
+
         Story("Transfer to cash account"). _
             AsA("Bank card holder"). _
             IWant("to transfer money from my savings account"). _
             SoThat("I can get cash easily from an ATM")
-
-        'Scenario("sds").Given("ldlfk", {1, 2, 3}, AddressOf SetAccountBalance)
 
         Scenario("Transfer money"). _
             Given("my savings account balance is", 100, AddressOf SetAccountBalance). _
@@ -36,7 +34,7 @@ Public Class UserWithdrawsCash
     End Sub
 
 
-    'TODO: Add test that makes this outcome Pending
+
     Public Sub TransferToAnotherCashAccount()
         Story.AsA("Bank card holder").IWant("to transfer money from my savings account").SoThat("I can get cash easily from an ATM")
 

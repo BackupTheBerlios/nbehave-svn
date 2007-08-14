@@ -24,7 +24,6 @@ Namespace Story
 
 
         Private _stories As IList = New ArrayList
-        Protected ReadOnly StoryType As Type = GetType(Story(Of ))
 
         Public Event RunStart As EventHandler(Of NBehaveEventArgs) Implements IStoryRunner.RunStart
         Public Event ExecutingStory As EventHandler(Of StoryEventArgs) Implements IStoryRunner.ExecutingStory
@@ -73,23 +72,21 @@ Namespace Story
         Protected Sub AddStory(Of T)(ByVal story As T, ByVal checkType As Boolean)
             If story Is Nothing Then Throw New ArgumentException("story is NULL")
 
-            Dim storyAdded As Boolean = False
             If checkType Then
-                Dim baseType As Type = story.GetType.BaseType
-                Do While baseType IsNot Nothing
-                    If baseType.IsGenericType AndAlso baseType.GetGenericTypeDefinition.Equals(StoryType) Then
-                        Stories.Add(story)
-                        storyAdded = True
-                        Exit Do
-                    End If
-                    baseType = baseType.BaseType
-                Loop
-                If Not storyAdded Then Throw New ArgumentException(String.Format("The story must be a type or subtype of {0}.", StoryType.Name))
+                If IsOfTypeStory(story.GetType) Then
+                    Stories.Add(story)
+                Else
+                    Throw New ArgumentException(String.Format("The story must be a subclass of {0}.", GetType(Story).Name))
+                End If
             Else
                 Stories.Add(story)
             End If
         End Sub
 
+
+        Protected Function IsOfTypeStory(ByVal type As Type) As Boolean
+            Return type.IsClass AndAlso Not type.IsAbstract AndAlso type.BaseType IsNot Nothing AndAlso type.IsSubclassOf(GetType(Story))
+        End Function
 
     End Class
 
@@ -123,12 +120,9 @@ Namespace Story
 
         Private Sub ParseAssemblyForStories(ByRef assemblyToParseForStories As Reflection.Assembly)
             For Each t As Type In assemblyToParseForStories.GetTypes()
-                If t.IsClass AndAlso Not t.IsAbstract Then
-                    Dim baseType As Type = t.BaseType
-                    If baseType IsNot Nothing AndAlso baseType.IsGenericType AndAlso baseType.GetGenericTypeDefinition.Equals(StoryType) Then
-                        Dim i As Object = System.Activator.CreateInstance(t, True)
-                        AddStory(i, False)
-                    End If
+                If IsOfTypeStory(t) Then
+                    Dim i As Object = System.Activator.CreateInstance(t, True)
+                    AddStory(i, False)
                 End If
             Next
         End Sub

@@ -2,8 +2,8 @@ Option Strict On
 
 Namespace FluentInterface
 
-    Public Interface IOutcome(Of T)
-        Function [And](ByVal outcome As World.IWorldOutcome(Of T)) As IOutcome(Of T)
+    Public Interface IOutcome
+        Function [And](ByVal description As String, ByVal outcome As World.IWorldOutcome) As IOutcome
     End Interface
 
 End Namespace

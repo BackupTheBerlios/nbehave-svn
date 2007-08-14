@@ -9,18 +9,17 @@ Namespace Scenario
         ReadOnly Property Title() As String
     End Interface
 
-    Public Interface IScenario(Of T)
+    Public Interface IScenario
         Inherits IScenarioBase
+        'Delegate Function AGiven(Of G)(ByVal params() As Object) As G
 
-        Delegate Function AGiven(Of G)(ByVal params() As Object) As G
-
-        Function Given(ByVal theGiven As World.IGiven(Of T)) As FluentInterface.IGiven(Of T)
-        Function Given(ByVal nameOfGiven As String, ByVal valueOfGiven As T, ByVal theGiven As AGiven(Of T)) As FluentInterface.IGiven(Of T)
-
-        Property World() As T
+        Property World() As Object
         Sub Specify()
-        Function SetupWorld() As T
+        Function SetupWorld() As Object
         Function Run() As Outcome
+
+        'This is the starting point when specifying your given/when & then's
+        Function Given(ByVal description As String, ByVal theGiven As World.IGiven) As FluentInterface.IGiven
 
     End Interface
 

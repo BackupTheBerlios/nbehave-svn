@@ -21,11 +21,11 @@ namespace NBehave.Framework.BehaviourNUnit
 
 
         // Our Scenario to play with
-        public class MyScenario:Scenario<SimplestPossibleWorld>
+        public class MyScenario:Scenario.Scenario 
         {
             public MyScenario() : base() { }
-            //public MyScenario(IGivenCollection<SimplestPossibleWorld> givens, IEvent<SimplestPossibleWorld> evt, IOutcomeCollection<SimplestPossibleWorld> outcomes) : base(givens, evt, outcomes) { }
-            public MyScenario(GivenCollection<SimplestPossibleWorld> givens, IEvent<SimplestPossibleWorld> evt, WorldOutcomeCollection<SimplestPossibleWorld> outcomes, SimplestPossibleWorld world) : base(givens, evt, outcomes, world) { }
+            //public MyScenario(IList<IGiven> givens, IEvent evt, IOutcomeCollection<SimplestPossibleWorld> outcomes) : base(givens, evt, outcomes) { }
+            public MyScenario(IList<IGiven> givens, IEvent evt, IList<IWorldOutcome> outcomes, SimplestPossibleWorld world) : base(givens, evt, outcomes, world) { }
 
 
             override public void Specify()
@@ -34,7 +34,7 @@ namespace NBehave.Framework.BehaviourNUnit
             }
 
 
-            public override SimplestPossibleWorld SetupWorld()
+            public override object  SetupWorld()
             {
                 return this.World ;
             }
@@ -47,12 +47,12 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             Mockery mocks = new Mockery();
-            IGiven<SimplestPossibleWorld> aGiven = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
-            GivenCollection<SimplestPossibleWorld> GivenCollection = new GivenCollection<SimplestPossibleWorld>();
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario(GivenCollection, null, null,null);  
+            IGiven aGiven = (IGiven)mocks.NewMock<IGiven>();
+            List<IGiven> GivenCollection = new List<IGiven>();
+            IScenario scenario = new MyScenario(GivenCollection, null, null,null);  
 
             //When
-            scenario.Given(aGiven);
+            scenario.Given("a given", aGiven);
 
             //Then
             Assert.AreEqual(1, GivenCollection.Count);
@@ -66,17 +66,17 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             Mockery mocks = new Mockery();
-            IGiven<SimplestPossibleWorld> aGiven = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
-            IGiven<SimplestPossibleWorld> anotherGiven = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
-            IGiven<SimplestPossibleWorld> yetAnotherGiven = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
-            GivenCollection<SimplestPossibleWorld> GivenCollection = new GivenCollection<SimplestPossibleWorld>();
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario(GivenCollection, null, null, null);
+            IGiven aGiven = (IGiven)mocks.NewMock<IGiven>();
+            IGiven anotherGiven = (IGiven)mocks.NewMock<IGiven>();
+            IGiven yetAnotherGiven = (IGiven)mocks.NewMock<IGiven>();
+            List<IGiven> GivenCollection = new List<IGiven>();
+            IScenario scenario = new MyScenario(GivenCollection, null, null, null);
 
             //When
             scenario.
-                Given(aGiven).
-                    And(anotherGiven).
-                    And(yetAnotherGiven);
+                Given("a given", aGiven).
+                    And("a given", anotherGiven).
+                    And("a given", yetAnotherGiven);
 
             //Then
             Assert.AreEqual(3, GivenCollection.Count);
@@ -88,12 +88,12 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             Mockery mocks = new Mockery();
-            IGiven<SimplestPossibleWorld> aGiven = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
-            IEvent<SimplestPossibleWorld> evt = mocks.NewMock<IEvent<SimplestPossibleWorld>>();
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario();
+            IGiven aGiven = (IGiven)mocks.NewMock<IGiven>();
+            IEvent evt = mocks.NewMock<IEvent>();
+            Scenario.Scenario  scenario = new MyScenario();
 
             //When
-            scenario.Given(aGiven).When(evt);
+            scenario.Given("a given", aGiven).When("an event", evt);
 
             //Then
             Assert.IsNotNull (scenario.Event);
@@ -105,15 +105,15 @@ namespace NBehave.Framework.BehaviourNUnit
         {
             //Given
             Mockery mocks = new Mockery();
-            IGiven<SimplestPossibleWorld> aGiven = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
-            IEvent<SimplestPossibleWorld> evt = mocks.NewMock<IEvent<SimplestPossibleWorld>>();
-            IWorldOutcome<SimplestPossibleWorld> outcome = mocks.NewMock<IWorldOutcome<SimplestPossibleWorld>>();
-            GivenCollection<SimplestPossibleWorld> givenCollection = new GivenCollection<SimplestPossibleWorld>();
-            WorldOutcomeCollection<SimplestPossibleWorld> outcomeCollection = new WorldOutcomeCollection<SimplestPossibleWorld>();
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario(givenCollection, null, outcomeCollection, null);
+            IGiven aGiven = (IGiven)mocks.NewMock<IGiven>();
+            IEvent evt = mocks.NewMock<IEvent>();
+            IWorldOutcome outcome = mocks.NewMock<IWorldOutcome>();
+            List<IGiven> givenCollection = new List<IGiven>();
+            List<IWorldOutcome> outcomeCollection = new List<IWorldOutcome>();
+            IScenario scenario = new MyScenario(givenCollection, null, outcomeCollection, null);
 
             //When
-            scenario.Given(aGiven).When(evt).Then(outcome);
+            scenario.Given("a given", aGiven).When("an event", evt).Then("an outcome", outcome);
 
             //Then
             Assert.AreEqual(1, outcomeCollection.Count);
@@ -129,12 +129,12 @@ namespace NBehave.Framework.BehaviourNUnit
 
             SimplestPossibleWorld world = new SimplestPossibleWorld();
 
-            IGiven<SimplestPossibleWorld> aGiven = mocks.NewMock<IGiven<SimplestPossibleWorld>>();
+            IGiven aGiven = mocks.NewMock<IGiven>();
             Expect.Once.On(aGiven).Method("Setup").With(world);
 
-            GivenCollection<SimplestPossibleWorld> l = new GivenCollection<SimplestPossibleWorld>();
+            List<IGiven> l = new List<IGiven>();
             l.Add(aGiven);
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario(l,null,null,world);
+            Scenario.Scenario scenario = new MyScenario(l, null, null, world);
             //When 
             scenario.SetupGivens();
 
@@ -149,10 +149,10 @@ namespace NBehave.Framework.BehaviourNUnit
             //Given
             Mockery mocks = new Mockery();
             SimplestPossibleWorld world = new SimplestPossibleWorld();
-            IEvent<SimplestPossibleWorld> evt = mocks.NewMock<IEvent<SimplestPossibleWorld>>();
+            IEvent evt = mocks.NewMock<IEvent>();
             Expect.Once.On(evt).Method("OccurIn").With(world);
 
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario(null,evt,null,world);
+            Scenario.Scenario scenario = new MyScenario(null, evt, null, world);
             //When 
             scenario.WorldEvent();
 
@@ -168,15 +168,15 @@ namespace NBehave.Framework.BehaviourNUnit
             Mockery mocks = new Mockery();
             SimplestPossibleWorld world = new SimplestPossibleWorld();
 
-            IWorldOutcome<SimplestPossibleWorld> outcome = mocks.NewMock<IWorldOutcome<SimplestPossibleWorld>>();
+            IWorldOutcome outcome = mocks.NewMock<IWorldOutcome>();
             Expect.Once.On(outcome).Method("Verify").With(world);
 
             Outcome outcomeResult = new Outcome(OutcomeResult.Passed, "Cool");
             Expect.Once.On(outcome).GetProperty("Result").Will(Return.Value(outcomeResult));
 
-            WorldOutcomeCollection<SimplestPossibleWorld> lst = new WorldOutcomeCollection<SimplestPossibleWorld>();
+            List<IWorldOutcome> lst = new List<IWorldOutcome>();
             lst.Add(outcome);
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario(null, null, lst, world);
+            Scenario.Scenario scenario = new MyScenario(null, null, lst, world);
             //When 
             scenario.VerifyOutcomes();
 
@@ -193,21 +193,21 @@ namespace NBehave.Framework.BehaviourNUnit
             SimplestPossibleWorld world = new SimplestPossibleWorld();
 
 
-            IGiven<SimplestPossibleWorld> given = (IGiven<SimplestPossibleWorld>)mocks.NewMock<IGiven<SimplestPossibleWorld>>();
+            IGiven given = (IGiven)mocks.NewMock<IGiven>();
             Expect.Once.On(given).Method("Setup").With(world);
-            GivenCollection<SimplestPossibleWorld> GivenCollection = new GivenCollection<SimplestPossibleWorld>();
+            List<IGiven> GivenCollection = new List<IGiven>();
             GivenCollection.Add(given);
 
-            IEvent<SimplestPossibleWorld> evt = mocks.NewMock<IEvent<SimplestPossibleWorld>>();
+            IEvent evt = mocks.NewMock<IEvent>();
             Expect.Once.On(evt).Method("OccurIn").With(world);
 
-            IWorldOutcome<SimplestPossibleWorld> outcome = mocks.NewMock<IWorldOutcome<SimplestPossibleWorld>>();
+            IWorldOutcome outcome = mocks.NewMock<IWorldOutcome>();
             Expect.Once.On(outcome).Method("Verify").With(world);
             Expect.Once.On(outcome).GetProperty("Result").Will(Return.Value(new Outcome(OutcomeResult.Passed, "Cool")));
-            WorldOutcomeCollection<SimplestPossibleWorld> outcomeCollection = new WorldOutcomeCollection<SimplestPossibleWorld>();
+            List<IWorldOutcome> outcomeCollection = new List<IWorldOutcome>();
             outcomeCollection.Add(outcome);
 
-            Scenario<SimplestPossibleWorld> scenario = new MyScenario(GivenCollection, evt, outcomeCollection, world);
+            IScenario scenario = new MyScenario(GivenCollection, evt, outcomeCollection, world);
             
             //When
             scenario.Run();
