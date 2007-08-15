@@ -52,6 +52,16 @@ Namespace Story
 
         Private _narrative As Narrative = New Narrative()
         Private _scenarios As New List(Of IScenario)
+        Private _title As String = String.Empty
+
+
+        Protected Sub New()
+            _title = CamelCaseToNormalSentence(Me.GetType.Name)
+        End Sub
+
+        Protected Sub New(ByVal title As String)
+            _title = title
+        End Sub
 
 
         ''' <summary>
@@ -115,9 +125,9 @@ Namespace Story
         End Function
 
 
-        Public ReadOnly Property Description() As String Implements IStoryBase.Title
+        Public ReadOnly Property Title() As String Implements IStoryBase.Title
             Get
-                Return CamelCaseToNormalSentence(Me.GetType.Name)
+                Return _title
             End Get
         End Property
 

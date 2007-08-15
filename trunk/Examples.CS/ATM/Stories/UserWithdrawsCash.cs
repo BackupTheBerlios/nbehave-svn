@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NBehave.Framework;
-using NBehave.Framework.World;
-using NBehave.Framework.Scenario;
 using NBehave.Framework.Story;
 
 using Example.ATM.Domain;
@@ -13,9 +7,13 @@ using Example.ATM.Outcomes;
 
 namespace Example.ATM.Stories
 {
-    //The name of the story is taken from the class name
+    
     public class UserWithdrawsCash:Story
     {
+        //If you skip on the constructor the story's name is taken from the name of the class, which in this case would result in the exakt same name.
+        public UserWithdrawsCash() : base("User withdraws cash") { }
+
+
         public override void Story()
         {
             AsA("Bank card holder").
@@ -25,7 +23,7 @@ namespace Example.ATM.Stories
 
         public override void Scenarios()
         {
-            IAccount account = new Account();        //TODO: Move Account Implementation out of that class
+            IAccount account = new Account(); 
             IAccount cashAccount = new Account();
 
             Scenario("Transfer money").
@@ -34,7 +32,6 @@ namespace Example.ATM.Stories
                 When("I transfer to cash account", new TransferToCashAccount(account, cashAccount, 20)).
                 Then("my savings account balance should be reduced", new VerifyAccountBalance(account,30)).
                 And("my cash account balance should be increased", new VerifyAccountBalance(cashAccount,40));
-            //AddScenario(scenario);
         }
     }
 }

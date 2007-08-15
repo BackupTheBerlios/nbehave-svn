@@ -46,10 +46,6 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviour.FluentScenario.vb" />
-    <Compile Include="Behaviour.FluentStory.vb" />
-    <Compile Include="Behaviour.vb" />
-    <Compile Include="BehaviourRunner.vb" />
     <Compile Include="Ensure.vb" />
     <Compile Include="FluentInterface\IGiven.vb" />
     <Compile Include="FluentInterface\IOutcome.vb" />
@@ -58,15 +54,27 @@
     <Compile Include="Outcome.vb" />
     <Compile Include="Scenario\IScenario.vb" />
     <Compile Include="Scenario\ScenarioEventArgs.vb" />
-    <Compile Include="Story\ConsoleRunner.vb" />
-    <Compile Include="Story\FullTextRunner.vb" />
+    <Compile Include="Story\ConsoleRunner.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Story\FullTextRunner.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Story\IStoryRunner.vb" />
     <Compile Include="Story\StoryEventArgs.vb" />
-    <Compile Include="Story\StoryRunner.Dynamic.vb" />
-    <Compile Include="Story\StreamRunner.vb" />
     <Compile Include="Story\Narrative.vb" />
     <Compile Include="Story\IStory.vb" />
     <Compile Include="Story\Story.vb" />
-    <Compile Include="Story\StoryRunner.vb" />
+    <Compile Include="Story\StoryRunner.Dynamic.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Story\StoryRunner.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Story\StoryRunnerBase.vb" />
+    <Compile Include="Story\StreamRunner.vb">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Utility.vb" />
     <Compile Include="World\IGiven.vb" />
     <Compile Include="World\IEvent.vb" />

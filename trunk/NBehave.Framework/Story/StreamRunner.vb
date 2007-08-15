@@ -24,19 +24,15 @@ Namespace Story
         Private _outStream As IO.StreamWriter
 
         Private WithEvents storyRunner As StoryRunner
-        Private WithEvents behaviourRunner As BehaviourRunner
-
 
         Public Sub New(ByVal outStream As IO.Stream, ByVal assemblyToParseForStories As Reflection.Assembly)
             Me._outStream = New IO.StreamWriter(outStream)
             storyRunner = New StoryRunner(assemblyToParseForStories)
-            behaviourRunner = New BehaviourRunner(assemblyToParseForStories)
         End Sub
 
 
         Public Overrides Sub Run()
-            If storyRunner.Stories.Count > 0 Then storyRunner.Run()
-            behaviourRunner.Run()
+            storyRunner.Run()
         End Sub
 
         Protected ReadOnly Property Summary() As String
@@ -73,11 +69,11 @@ Namespace Story
         End Property
 
 
-        Protected Overridable Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunStart, behaviourRunner.RunStart
+        Protected Overridable Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunStart
         End Sub
 
 
-        Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunFinished, behaviourRunner.RunFinished
+        Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunFinished
             OutStream.WriteLine()
             WriteSummary()
             WriteFinalOutcome()
@@ -86,12 +82,12 @@ Namespace Story
         End Sub
 
 
-        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.ExecutingStory, behaviourRunner.ExecutingStory
+        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.ExecutingStory
             StoryCount += 1
         End Sub
 
 
-        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.StoryExecuted, behaviourRunner.StoryExecuted
+        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.StoryExecuted
             WriteResultAfterStoryRun(e.Outcome)
             If e.Outcome.Result = OutcomeResult.Failed Then
                 failedStories.Add(e.Outcome)
@@ -100,22 +96,22 @@ Namespace Story
         End Sub
 
 
-        Protected Overridable Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.ScenarioExecuted, behaviourRunner.ScenarioExecuted
-            OutStream.Write("   " & GetDescription(sender))
+        Protected Overridable Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.ScenarioExecuted
+            OutStream.Write("   " & GetScenarioTitle(sender))
             WriteOutcome(e.Outcome)
             OutStream.WriteLine()
         End Sub
 
 
-        Private Function GetDescription(ByVal sender As Object) As String
-            Dim description As String = String.Empty
+        Private Function GetScenarioTitle(ByVal sender As Object) As String
+            Dim title As String = String.Empty
 
             If GetType(IScenarioBase).IsAssignableFrom(sender.GetType) Then
-                description = CType(sender, IScenarioBase).Title
+                title = CType(sender, IScenarioBase).Title
             Else
-                description = CamelCaseToNormalSentence(sender.GetType.Name)
+                title = CamelCaseToNormalSentence(sender.GetType.Name)
             End If
-            Return description
+            Return title
         End Function
 
 

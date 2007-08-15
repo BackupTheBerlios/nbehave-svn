@@ -17,9 +17,9 @@ Namespace Story
             MyBase.New(outStream, assemblyToParseForStories)
         End Sub
 
-        Protected Overrides Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            MyBase.StreamRunnerRunStart(sender, e)
-        End Sub
+        'Protected Overrides Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs)
+        '    MyBase.StreamRunnerRunStart(sender, e)
+        'End Sub
 
         Protected Overrides Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
             WriteStoryDescription(CType(e.Story, IStoryBase))
@@ -27,9 +27,9 @@ Namespace Story
             MyBase.StreamRunnerBeforeStoryRun(sender, e)
         End Sub
 
-        Protected Overrides Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
-            MyBase.StreamRunnerAfterStoryRun(sender, e)
-        End Sub
+        'Protected Overrides Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
+        '    MyBase.StreamRunnerAfterStoryRun(sender, e)
+        'End Sub
 
         Protected Overrides Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs)
             MyBase.StreamRunnerScenarioExecuted(sender, e)
@@ -55,9 +55,9 @@ Namespace Story
         End Sub
 
 
-        Protected Overrides Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            MyBase.StreamRunnerRunFinished(sender, e)
-        End Sub
+        'Protected Overrides Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs)
+        '    MyBase.StreamRunnerRunFinished(sender, e)
+        'End Sub
 
         Protected Overrides Sub WriteFinalOutcome()
             OutStream.Flush()

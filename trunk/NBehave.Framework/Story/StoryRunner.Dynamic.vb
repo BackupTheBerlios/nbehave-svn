@@ -1,6 +1,5 @@
 Option Strict Off
 
-
 Namespace Story
 
     Partial Public Class StoryRunner
@@ -10,6 +9,5 @@ Namespace Story
         End Sub
 
     End Class
-
 
 End Namespace

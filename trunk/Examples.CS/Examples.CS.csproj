@@ -37,7 +37,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ATM\AccountBehaviour.cs" />
     <Compile Include="ATM\Domain\Account.cs" />
     <Compile Include="ATM\Domain\IAccount.cs" />
     <Compile Include="ATM\Events\TransferToCashAccount.cs" />
