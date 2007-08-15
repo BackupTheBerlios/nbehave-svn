@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports NBehave.Framework.Scenario
-Imports system.Threading.Thread
+Imports NBehave.Framework.Utility
 
 
 Namespace Story
@@ -17,28 +17,36 @@ Namespace Story
             MyBase.New(outStream, assemblyToParseForStories)
         End Sub
 
-        'Protected Overrides Sub StreamRunnerRunStart(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-        '    MyBase.StreamRunnerRunStart(sender, e)
-        'End Sub
 
         Protected Overrides Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
-            WriteStoryDescription(CType(e.Story, IStoryBase))
-            If PrintNarrative Then WriteStoryNarrative(CType(e.Story, IStoryBase))
+            OutStream.Write("Story: ")
             MyBase.StreamRunnerBeforeStoryRun(sender, e)
+            OutStream.WriteLine()
+            If PrintNarrative Then WriteStoryNarrative(CType(e.Story, IStoryBase))
         End Sub
 
-        'Protected Overrides Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs)
-        '    MyBase.StreamRunnerAfterStoryRun(sender, e)
-        'End Sub
+
 
         Protected Overrides Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-            MyBase.StreamRunnerScenarioExecuted(sender, e)
+            OutStream.Write("   " & GetScenarioTitle(sender))
+            WriteOutcome(e.Outcome)
+            OutStream.WriteLine()
         End Sub
 
 
-        Private Sub WriteStoryDescription(ByVal story As IStoryBase)
-            OutStream.WriteLine("Story: " & story.Title)
-        End Sub
+
+        Private Function GetScenarioTitle(ByVal sender As Object) As String
+            Dim title As String = String.Empty
+
+            If GetType(IScenarioBase).IsAssignableFrom(sender.GetType) Then
+                title = CType(sender, IScenarioBase).Title
+            Else
+                title = CamelCaseToNormalSentence(sender.GetType.Name)
+            End If
+            Return title
+        End Function
+
+
 
         Private Sub WriteStoryNarrative(ByVal story As IStoryBase)
             Dim narrative As String = story.Narrative.ToString
@@ -47,27 +55,19 @@ Namespace Story
         End Sub
 
 
-        Protected Overrides Sub WriteResultAfterStoryRun(ByVal outcome As Outcome)
-            OutStream.Write("Story ")
-            WriteOutcome(outcome)
-            OutStream.WriteLine()
-            OutStream.Flush()
-        End Sub
-
-
-        'Protected Overrides Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs)
-        '    MyBase.StreamRunnerRunFinished(sender, e)
-        'End Sub
-
         Protected Overrides Sub WriteFinalOutcome()
+            If MyBase.FailCount = 0 Then
+                If PendingCount = 0 Then
+                    Console.ForegroundColor = ConsoleColor.Green
+                Else
+                    Console.ForegroundColor = ConsoleColor.Yellow
+                End If
+            Else
+                Console.ForegroundColor = ConsoleColor.Red
+            End If
+            MyBase.WriteFinalOutcome()
             OutStream.Flush()
-        End Sub
-
-        Protected Overrides Sub WriteSummary()
-            OutStream.Flush()
-        End Sub
-
-        Protected Overrides Sub WriteFailures()
+            Console.ResetColor()
             OutStream.Flush()
         End Sub
 

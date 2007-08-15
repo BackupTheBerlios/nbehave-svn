@@ -18,8 +18,6 @@ namespace NBehave.Framework.BehaviourNUnit
     public class ScenarioBehaviour
     {
 
-
-
         // Our Scenario to play with
         public class MyScenario:Scenario.Scenario 
         {
@@ -216,8 +214,6 @@ namespace NBehave.Framework.BehaviourNUnit
             mocks.VerifyAllExpectationsHaveBeenMet();
 
         }
-
-
 
     }
 

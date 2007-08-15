@@ -8,14 +8,13 @@ Imports NBehave.Framework.Utility
 Namespace Scenario
 
 
-
+    'TODO: FluentInterface in its own class?
     Public MustInherit Class Scenario
         Implements FluentInterface.IGivenStart
         Implements FluentInterface.IGiven
         Implements FluentInterface.IEvent
         Implements FluentInterface.IOutcome
         Implements IScenario
-
 
 
         Public MustOverride Sub Specify() Implements IScenario.Specify

@@ -46,6 +46,7 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ATM\Domain\Account.vb" />
     <Compile Include="ATM\Domain\IAccount.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

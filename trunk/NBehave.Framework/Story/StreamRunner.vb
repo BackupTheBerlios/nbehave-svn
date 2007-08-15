@@ -2,7 +2,6 @@ Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports NBehave.Framework.Scenario
-Imports NBehave.Framework.Utility
 Imports system.Threading.Thread
 
 
@@ -12,13 +11,15 @@ Namespace Story
         Inherits StoryRunnerBase
 
 
-        Private ReadOnly SummaryString As String = "Passed: {0}" & Environment.NewLine & "Failed: {1}"
+        Private ReadOnly SummaryString As String = "Stories result: Passed: {0}, Failed: {1}, Pending:{2}"
         Public Const FailedString As String = "Failed !"
         Public Const PassedString As String = "Passed !"
+        Public Const PendingString As String = "Pending."
 
 
-        Private _storyCount As Int32
-        Private _failCount As Int32
+        Private _storyCount As Int32 = 0
+        Private _pendingCount As Int32 = 0
+        Private _failCount As Int32 = 0
 
         Private failedStories As New List(Of Outcome)
         Private _outStream As IO.StreamWriter
@@ -59,6 +60,15 @@ Namespace Story
             End Set
         End Property
 
+        Protected Property PendingCount() As Int32
+            Get
+                Return _pendingCount
+            End Get
+            Set(ByVal Value As Int32)
+                _pendingCount = Value
+            End Set
+        End Property
+
         Public Property FailCount() As Int32
             Get
                 Return _failCount
@@ -73,6 +83,27 @@ Namespace Story
         End Sub
 
 
+        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.ExecutingStory
+            OutStream.Write(CType(e.Story, IStoryBase).Title & "  ")
+            StoryCount += 1
+        End Sub
+
+
+        Protected Overridable Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.ScenarioExecuted
+            WriteResultAfterScenarioRun(e.Outcome)
+        End Sub
+
+
+        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.StoryExecuted
+            WriteOutcome(e.Outcome)
+            OutStream.WriteLine()
+            If e.Outcome.Result = OutcomeResult.Failed Then
+                failedStories.Add(e.Outcome)
+                FailCount += 1
+            End If
+        End Sub
+
+
         Protected Overridable Sub StreamRunnerRunFinished(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.RunFinished
             OutStream.WriteLine()
             WriteSummary()
@@ -81,38 +112,6 @@ Namespace Story
             OutStream.Flush()
         End Sub
 
-
-        Protected Overridable Sub StreamRunnerBeforeStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.ExecutingStory
-            StoryCount += 1
-        End Sub
-
-
-        Protected Overridable Sub StreamRunnerAfterStoryRun(ByVal sender As Object, ByVal e As StoryEventArgs) Handles storyRunner.StoryExecuted
-            WriteResultAfterStoryRun(e.Outcome)
-            If e.Outcome.Result = OutcomeResult.Failed Then
-                failedStories.Add(e.Outcome)
-                FailCount += 1
-            End If
-        End Sub
-
-
-        Protected Overridable Sub StreamRunnerScenarioExecuted(ByVal sender As Object, ByVal e As NBehaveEventArgs) Handles storyRunner.ScenarioExecuted
-            OutStream.Write("   " & GetScenarioTitle(sender))
-            WriteOutcome(e.Outcome)
-            OutStream.WriteLine()
-        End Sub
-
-
-        Private Function GetScenarioTitle(ByVal sender As Object) As String
-            Dim title As String = String.Empty
-
-            If GetType(IScenarioBase).IsAssignableFrom(sender.GetType) Then
-                title = CType(sender, IScenarioBase).Title
-            Else
-                title = CamelCaseToNormalSentence(sender.GetType.Name)
-            End If
-            Return title
-        End Function
 
 
 
@@ -127,7 +126,7 @@ Namespace Story
         End Sub
 
 
-        Protected Overridable Sub WriteResultAfterStoryRun(ByVal outcome As Outcome)
+        Protected Overridable Sub WriteResultAfterScenarioRun(ByVal outcome As Outcome)
             Select Case outcome.Result
                 Case OutcomeResult.Passed : OutStream.Write(".")
                 Case OutcomeResult.Failed : OutStream.Write("x")
@@ -141,7 +140,11 @@ Namespace Story
 
         Protected Overridable Sub WriteFinalOutcome()
             If FailCount = 0 Then
-                OutStream.WriteLine(PassedString)
+                If PendingCount = 0 Then
+                    OutStream.WriteLine(PassedString)
+                Else
+                    OutStream.WriteLine(PendingString)
+                End If
             Else
                 OutStream.WriteLine(FailedString)
             End If
@@ -149,7 +152,7 @@ Namespace Story
 
 
         Protected Overridable Sub WriteSummary()
-            OutStream.WriteLine(String.Format(CurrentThread.CurrentUICulture, SummaryString, StoryCount - FailCount, FailCount))
+            OutStream.WriteLine(String.Format(CurrentThread.CurrentUICulture, SummaryString, StoryCount - FailCount, FailCount, PendingCount))
             OutStream.Flush()
         End Sub
 

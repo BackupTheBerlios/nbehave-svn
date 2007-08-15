@@ -26,7 +26,8 @@ namespace NBehave.Framework.BehaviourNUnit
 
             string outcome = string.Format("As a {1}{0}I want {2}{0}So that {3}", Environment.NewLine, user, feature, benefit);
             //When
-            theStory.AsA(user).IWant(feature).SoThat(benefit);
+
+            ((INarrativeAsA)theStory).AsA(user).IWant(feature).SoThat(benefit);
 
             //Then
             Assert.AreEqual(outcome, theStory.Narrative.ToString());

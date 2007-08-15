@@ -1,6 +1,6 @@
-0.2.0 Changes
-	Interface IStory has been changed, things have been renamed.
-	FullTextRunner - writes out the full story.
+0.1.2 Changes
+	You dont need a separate Scenario class, its all in the Story class now. Take a look at the example code .
+	FullTextRunner - writes out the full story. There is even colors now :)
 	
 
 0.1.0 First version

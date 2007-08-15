@@ -20,7 +20,6 @@ Namespace Story
         End Sub
 
         Public Sub New(ByVal assemblyToParseForStories As Reflection.Assembly)
-            'Me.New()
             If assemblyToParseForStories Is Nothing Then Throw New ArgumentException("assemblyToParseForStories is NULL")
 
             ParseAssemblyForStories(assemblyToParseForStories)

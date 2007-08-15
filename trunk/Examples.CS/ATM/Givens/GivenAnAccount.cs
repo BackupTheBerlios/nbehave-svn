@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NBehave.Framework.World;
-using Example.ATM.Domain;
+using Examples.CS.ATM.Domain;
 
-namespace Example.ATM.Givens
+namespace Examples.CS.ATM.Givens
 {
     public class GivenAnAccount : IGiven  
     {

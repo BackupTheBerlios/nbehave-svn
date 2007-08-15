@@ -16,15 +16,14 @@ namespace NBehave.Framework.BehaviourNUnit
         public void ShouldRunStoryAndGetStuffInStream()
         {
             //Given
-            string expectToStartWith = "Story: Fake story" + Environment.NewLine;
+            string expectToStartWith = "Story: Fake story";
             string expectToContain = "--> Passed" + Environment.NewLine;
 
-            FakeStory story = new FakeStory(); // mocks.NewMock<IStory<SimplestPossibleWorld>>();
+            FakeStory story = new FakeStory(); 
 
             System.Collections.ArrayList stories = new System.Collections.ArrayList();
             stories.Add(story);
             Stream sr = new MemoryStream();
-            //StreamRunner storyRunner = new FullTextRunner(sr, stories);
             StreamRunner storyRunner = new FullTextRunner(sr, System.Reflection.Assembly.GetAssembly(this.GetType()));
 
             //When

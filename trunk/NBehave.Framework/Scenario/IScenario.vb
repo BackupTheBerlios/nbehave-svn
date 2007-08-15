@@ -11,7 +11,6 @@ Namespace Scenario
 
     Public Interface IScenario
         Inherits IScenarioBase
-        'Delegate Function AGiven(Of G)(ByVal params() As Object) As G
 
         Property World() As Object
         Sub Specify()

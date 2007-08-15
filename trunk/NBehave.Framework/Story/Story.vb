@@ -11,6 +11,8 @@ Namespace Story
 
     Public MustInherit Class Story
         Implements IStory
+        Implements INarrativeAsA
+
 
 
         Private Class StoryScenario
@@ -44,10 +46,7 @@ Namespace Story
 
         Public MustOverride Sub Scenarios() Implements IStory.Scenarios
 
-
         Public Event ScenarioOutcome(ByVal sender As Object, ByVal e As NBehaveEventArgs) Implements IStory.ScenarioOutcome
-        'Public Event ExecutingScenario As EventHandler(Of ScenarioEventArgs)
-        'Public Event ScenarioExecuted As EventHandler(Of ScenarioEventArgs)
 
 
         Private _narrative As Narrative = New Narrative()
@@ -59,9 +58,6 @@ Namespace Story
             _title = CamelCaseToNormalSentence(Me.GetType.Name)
         End Sub
 
-        Protected Sub New(ByVal title As String)
-            _title = title
-        End Sub
 
 
         ''' <summary>
@@ -71,7 +67,13 @@ Namespace Story
         Public MustOverride Sub Story() Implements IStory.Story
 
 
-        Public Function AsA(ByVal role As String) As INarrativeIWant
+        Protected Function Story(ByVal title As String) As INarrativeAsA
+            _title = title
+            Return Me
+        End Function
+
+
+        Protected Function AsA(ByVal role As String) As INarrativeIWant Implements INarrativeAsA.AsA
             Return _narrative.AsA(role)
         End Function
 
@@ -130,7 +132,6 @@ Namespace Story
                 Return _title
             End Get
         End Property
-
 
     End Class
 

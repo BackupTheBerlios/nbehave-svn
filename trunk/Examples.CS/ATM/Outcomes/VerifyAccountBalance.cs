@@ -1,8 +1,8 @@
 using NBehave.Framework.World;
-using Example.ATM.Domain;
+using Examples.CS.ATM.Domain;
 
 
-namespace Example.ATM.Outcomes
+namespace Examples.CS.ATM.Outcomes
 {
     class VerifyAccountBalance : WorldOutcome
     {

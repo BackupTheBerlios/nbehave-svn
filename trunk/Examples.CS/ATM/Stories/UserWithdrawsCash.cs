@@ -1,24 +1,22 @@
 using NBehave.Framework.Story;
 
-using Example.ATM.Domain;
-using Example.ATM.Givens;
-using Example.ATM.Events;
-using Example.ATM.Outcomes;
+using Examples.CS.ATM.Domain;
+using Examples.CS.ATM.Givens;
+using Examples.CS.ATM.Events;
+using Examples.CS.ATM.Outcomes;
 
-namespace Example.ATM.Stories
+namespace Examples.CS.ATM.Stories
 {
     
     public class UserWithdrawsCash:Story
     {
-        //If you skip on the constructor the story's name is taken from the name of the class, which in this case would result in the exakt same name.
-        public UserWithdrawsCash() : base("User withdraws cash") { }
-
-
+        //You can skip the Story part and go directly for AsA(... If you skip Story("title")... then the name of the story is derived from the name of the class
         public override void Story()
         {
-            AsA("Bank card holder").
-            IWant("to be able to withdraw cash from an ATM").
-            SoThat("I don't have to visit the bank");
+            Story("User withdraws cash").            
+                AsA("Bank card holder").
+                IWant("to be able to withdraw cash from an ATM").
+                SoThat("I don't have to visit the bank");
         }
 
         public override void Scenarios()

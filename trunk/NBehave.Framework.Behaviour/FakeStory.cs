@@ -102,9 +102,5 @@ namespace NBehave.Framework.BehaviourNUnit
             List<IGiven> GivenCollection = new List<IGiven>();
             GivenCollection.Add(given);
         }
-
-
-
-
     }
 }

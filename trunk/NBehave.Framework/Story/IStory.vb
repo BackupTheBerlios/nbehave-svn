@@ -13,6 +13,7 @@ Namespace Story
         ReadOnly Property ScenarioItems() As IList(Of IScenario)
     End Interface
 
+
     Public Interface IStoryBase
         ReadOnly Property Title() As String
         ReadOnly Property Narrative() As Narrative

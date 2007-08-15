@@ -29,9 +29,6 @@ namespace NBehave.Framework.BehaviourNUnit
             //Given
             FakeStory story = new FakeStory(); 
 
-            //System.Collections.ArrayList stories = new System.Collections.ArrayList();
-            //stories.Add(story);
-            //StoryRunner storyRunner = new StoryRunner(stories);
             StoryRunner storyRunner = new StoryRunner();
             storyRunner.AddStory(story);
             //When
@@ -80,7 +77,6 @@ namespace NBehave.Framework.BehaviourNUnit
         public void SHouldNotBePossibleToAddStringAsStory()
         {
             //Given
-            //System.Collections.IList lst=new System.Collections.ArrayList();
             StoryRunner storyRunner = new StoryRunner(Assembly.GetAssembly(this.GetType()));
 
             string story = "Ths is not a story";

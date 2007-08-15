@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Example.ATM.Domain //Examples.CS.ATM.Domain
+namespace Examples.CS.ATM.Domain
 {
     public class Account : IAccount
     {
